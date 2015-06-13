@@ -1,0 +1,29 @@
+<?php
+echo $this->doctype();
+$children = $this->viewModel()->getCurrent()->getChildren();
+$child = $children[0];
+?>
+<html lang="en">
+<?php
+// The layout's head
+echo $this->partial("header", array('child' => $child));
+?>
+<body<?php echo ($child->bodyClass) ? ' class="' . $child->bodyClass . '"' : ''; ?>>
+<noscript>
+    <div id="nojs">
+        <?php echo $this->translate("Please enable javascript for the site to work properly."); ?>
+    </div>
+</noscript>
+<?php if(!$child->hideHeader && $this->identity()): ?>
+<?php endif; ?>
+<div id="content">
+    <?php echo $this->content; ?>
+</div>
+<?php
+echo $this->showMessages();
+
+// The layout's footer
+echo $this->partial("footer_guest", array('child' => $child));
+?>
+</body>
+</html>
