@@ -466,6 +466,17 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
+    public function getRelatedProductsList()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRelatedProductsList', array());
+
+        return parent::getRelatedProductsList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getRelatedProducts()
     {
 

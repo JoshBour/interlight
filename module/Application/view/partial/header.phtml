@@ -2,14 +2,14 @@
     <?php
     $child = $this->child;
     $isMobile = $this->mobile();
-    $pageTitle = (isset($child->pageTitle)) ? $child->pageTitle : "Info";
+    $pageTitle = (isset($child->pageTitle)) ? $child->pageTitle : "Interlight - " . ucwords($this->routeName()) ;
     $follow = (isset($child->follow)) ? "noindex, nofollow" : "feed, follow, archieve";
 
     // The website's title.
     echo $this->headTitle($pageTitle);
 
     // The meta tags
-    $description = isset($child->metaInfo['description']) ? $child->metaInfo['description'] : 'Info is a company that specializes in lighting technology and equipment';
+    $description = isset($child->metaInfo['description']) ? $child->metaInfo['description'] : 'Interlight is a company that specializes in lighting technology and equipment';
     $keywords = isset($child->metaInfo['keywords']) ? $child->metaInfo['keywords'] : 'info, lighting, products, equipment, led, lamp';
 
     // We append everything to the headMeta

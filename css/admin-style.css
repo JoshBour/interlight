@@ -308,9 +308,9 @@
 
     #logo a{
         height: 70px;
-        margin: 5px 18px 0 0;
+        margin-top: 5px;
         display: block;
-        width: 129px;
+        width: 81px;
         background: transparent url('../images/logo.png') no-repeat 0 0;
         text-indent: -9999px;
     }

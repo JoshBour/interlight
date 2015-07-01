@@ -62,7 +62,7 @@ class CategoryController extends BaseController
                         "activeRoute" => "products_index",
                         "activeCategory" => $category,
                         "categories" => $categories,
-                        "pageTitle" => "Info - " . $category->getName()
+                        "pageTitle" => "Interlight - " . $category->getName()
                     ));
                 }
             }

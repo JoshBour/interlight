@@ -34,9 +34,10 @@ class AboutController extends BaseController
         $aboutCategoryRepository = $this->getAboutCategoryRepository();
         $aboutCategories = $aboutCategoryRepository->findAll();
         $category = $this->params()->fromRoute("category");
-        if ($category == "partners") {
-            $aboutCategory = $this->getRepository('application', 'partner')->findAll();
-        } else if ($category == 'first') {
+//        if ($category == "partners") {
+//            $aboutCategory = $this->getRepository('application', 'partner')->findAll();
+//        } else
+        if ($category == 'first') {
             $firstCategory = $aboutCategoryRepository->findBy(array(), array(), 1);
             $aboutCategory = $firstCategory[0];
             $category = $aboutCategory->getUrl();
@@ -49,7 +50,7 @@ class AboutController extends BaseController
             "activeCategory" => $category,
             "bodyClass" => "aboutPage",
             "useBlackLayout" => true,
-            "pageTitle" => "About Us"
+            "pageTitle" => "Interlight - About Us"
         ));
     }
 

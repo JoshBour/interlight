@@ -40,7 +40,7 @@ class IndexController extends BaseController
         return new ViewModel(array(
             "categories" => $categories,
             "useBlackLayout" => true,
-            "pageTitle" => "Info - Products"
+            "pageTitle" => "Interlight - Products"
         ));
     }
 
@@ -56,7 +56,7 @@ class IndexController extends BaseController
                 "product" => $product,
                 "activeRoute" => "products_index",
                 "bodyClass" => "productPage",
-                "pageTitle" => "Info - " . $product->getName(),
+                "pageTitle" => "Interlight - " . $product->getName(),
                 "tab" => $this->params()->fromRoute("tab")
             ));
         }

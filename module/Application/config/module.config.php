@@ -68,46 +68,46 @@ return array(
                     )
                 )
             ),
-            'partners' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route' => '/admin/partners',
-                    'defaults' => array(
-                        'controller' => __NAMESPACE__ . '\Controller\Partner',
-                        'action' => 'list',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'save' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
-                        'options' => array(
-                            'route' => '/save',
-                            'defaults' => array(
-                                'action' => 'save'
-                            )
-                        )
-                    ),
-                    'add' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
-                        'options' => array(
-                            'route' => '/add',
-                            'defaults' => array(
-                                'action' => 'add'
-                            )
-                        )
-                    ),
-                    'remove' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
-                        'options' => array(
-                            'route' => '/remove',
-                            'defaults' => array(
-                                'action' => 'remove'
-                            )
-                        )
-                    )
-                )
-            ),
+//            'partners' => array(
+//                'type' => 'Zend\Mvc\Router\Http\Literal',
+//                'options' => array(
+//                    'route' => '/admin/partners',
+//                    'defaults' => array(
+//                        'controller' => __NAMESPACE__ . '\Controller\Partner',
+//                        'action' => 'list',
+//                    ),
+//                ),
+//                'may_terminate' => true,
+//                'child_routes' => array(
+//                    'save' => array(
+//                        'type' => 'Zend\Mvc\Router\Http\Literal',
+//                        'options' => array(
+//                            'route' => '/save',
+//                            'defaults' => array(
+//                                'action' => 'save'
+//                            )
+//                        )
+//                    ),
+//                    'add' => array(
+//                        'type' => 'Zend\Mvc\Router\Http\Literal',
+//                        'options' => array(
+//                            'route' => '/add',
+//                            'defaults' => array(
+//                                'action' => 'add'
+//                            )
+//                        )
+//                    ),
+//                    'remove' => array(
+//                        'type' => 'Zend\Mvc\Router\Http\Literal',
+//                        'options' => array(
+//                            'route' => '/remove',
+//                            'defaults' => array(
+//                                'action' => 'remove'
+//                            )
+//                        )
+//                    )
+//                )
+//            ),
             'slides' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(

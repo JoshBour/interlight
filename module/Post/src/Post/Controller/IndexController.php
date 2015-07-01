@@ -55,7 +55,7 @@ class IndexController extends BaseController
             ->setItemCountPerPage(6);
         return new ViewModel(array(
             "useBlackLayout" => true,
-            "pageTitle" => "Info - Latest News",
+            "pageTitle" => "Interlight - Latest News",
             "bodyClass" => "postsPage",
             "posts" => $posts,
         ));
@@ -71,7 +71,7 @@ class IndexController extends BaseController
                     "useBlackLayout" => true,
                     "post" => $post,
                     "activeRoute" => "posts_index",
-                    "pageTitle" => "Info - " . $post->getTitle()
+                    "pageTitle" => "Interlight - " . $post->getTitle()
                 ));
             }
         }

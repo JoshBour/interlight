@@ -219,10 +219,6 @@ body {
     background: #E0E0E3 url(../images/sidebar.png) repeat;
 }
 
-/*body.homePage{*/
-    /*overflow:auto;*/
-/*}*/
-
 body.blackLayout{
     color:black;
     background: #100d10 url(../images/background.png);
@@ -359,10 +355,10 @@ nav ul li a:hover {
 }
 
 #logo a {
-    height: 70px;
-    margin: 5px 18px 0 0;
+    height: 60px;
+    margin: 10px 18px 0 0;
     display: block;
-    width: 129px;
+    width: 251px;
     background: transparent url('../images/logo.png') no-repeat 0 0;
     text-indent: -9999px;
 }
@@ -814,6 +810,10 @@ nav ul li a:hover {
 
     /* ===================================================== */
     /*                       About page                      */
+
+        .aboutPage #content, .productPage #content, .homePage #content{
+            margin-bottom: 30px;
+        }
 
         .aboutPage .module{
             padding:10px;
