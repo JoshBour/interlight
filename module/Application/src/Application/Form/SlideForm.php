@@ -36,7 +36,7 @@ class SlideForm extends Form{
         $this->setValidationGroup(array(
 //            'security',
             'slide' => array(
-                'post',
+                'url',
                 'position',
                 'caption',
                 'thumbnail',

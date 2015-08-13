@@ -52,6 +52,15 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'load' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
+                            'defaults' => array(
+                                'action' => 'load'
+                            )
+                        )
+                    ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
@@ -70,12 +79,12 @@ return array(
                             )
                         )
                     ),
-                    'remove' => array(
+                    'delete' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/remove',
+                            'route' => '/delete',
                             'defaults' => array(
-                                'action' => 'remove'
+                                'action' => 'delete'
                             )
                         )
                     )
@@ -88,7 +97,8 @@ return array(
             'postForm' => __NAMESPACE__ . '\Factory\PostFormFactory',
         ),
         'invokables' => array(
-            'postService' => __NAMESPACE__ . '\Service\Post',
+            'postService' => __NAMESPACE__ . '\Service\PostService',
+            'postFilter' => __NAMESPACE__ . '\Filter\PostFilter',
         )
     ),
     'controllers' => array(
@@ -102,6 +112,7 @@ return array(
         ),
         'template_map' => array(
             'paginator' => __DIR__ . '/../view/partial/paginator.phtml',
+            'post' => __DIR__ . '/../view/partial/post.phtml',
         ),
         'strategies' => array(
             'ViewJsonStrategy'

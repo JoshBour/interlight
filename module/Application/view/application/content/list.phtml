@@ -1,20 +1,12 @@
-<div id="optionPanel">
-    <span id="saveChanges"><?php echo $this->translate("Save"); ?></span>
-</div>
-<div class="tableWrapper">
-    <table id="contents" class="editableTable target-content">
-        <?php
-        for ($i = 0; $i < 3; $i++)
-            echo '<colgroup></colgroup>';
-        ?>
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th><?php echo $this->translate("Name"); ?></th>
-            <th><?php echo $this->translate("Content"); ?></th>
-        </tr>
-        </thead>
-        <tbody>
+<div class="tableWrapper" data-entity="contents" data-deletable="false" data-creatable="false">
+    <div class="tableHeader">
+        <div class="tableColumn">
+            <span>Id</span>
+            <span><?php echo $this->translate("Name"); ?></span>
+            <span><?php echo $this->translate("Content"); ?></span>
+        </div>
+    </div>
+    <div class="tableBody">
         <?php
         /**
          * @var \Application\Entity\Content $content
@@ -22,16 +14,15 @@
         foreach ($this->contents as $content):
             $contentText = $content->getContent();
             ?>
-            <tr>
-                <td class="id"><?php echo $content->getContentId(); ?></td>
-                <td class="contentName unEditable"><?php echo $content->getName(); ?></td>
-                <td class="contentContent editTextfield required"><textarea class="invisible"><?php echo $contentText ? $contentText : " - "; ?></textarea></td>
-            </tr>
+            <div class="tableColumn">
+                <div data-attribute="id"><?php echo $content->getContentId(); ?></div>
+                <div data-attribute="name" data-editable="false">
+                    <span class="tableCellText"><?php echo $content->getName(); ?></span>
+                </div>
+                <div data-attribute="content" data-type="textarea">
+                        <span class="tableCellText"><?php echo $contentText ? htmlentities($contentText) : "-"; ?></span>
+                </div>
+            </div>
         <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-<div id="editPanel">
-    <textarea class="editInput"></textarea>
-    <span id="editDone"><?php echo $this->translate("Done"); ?></span>
+    </div>
 </div>

@@ -50,20 +50,20 @@ class Product
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      */
-    private $datasheet;
+    private $datasheet = null;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      */
-    private $thumbnail;
+    private $thumbnail = null;
 
     /**
      * @ORM\Column(type="string", length=150, nullable=true)
      */
-    private $specifications;
+    private $specifications = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="RelatedProduct", mappedBy="product", cascade={"persist", "remove"}, orphanRemoval=TRUE, fetch="EXTRA_LAZY" )
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="relatedToProducts", cascade={"remove"})
      */
     private $relatedProducts;
 
@@ -71,20 +71,28 @@ class Product
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="category_id")
      */
-    private $category;
+    private $category = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="RelatedProduct", mappedBy="relatedProduct", cascade={"persist", "remove"}, orphanRemoval=TRUE )
+     * @ORM\ManyToMany(targetEntity="Product", inversedBy="relatedProduct")
+     * @ORM\JoinTable(name="related_products",
+     *      joinColumns={@ORM\JoinColumn(name="related_product_id", referencedColumnName="product_id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="product_id")}
+     * )
      */
     private $relatedToProducts;
 
     /**
-     * @ORM\OneToMany(targetEntity="ProductVariation", mappedBy="product", cascade={"persist", "remove"}, orphanRemoval=TRUE, fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="variationToProducts", cascade={"remove"})
      */
     private $productVariations;
 
     /**
-     * @ORM\OneToMany(targetEntity="ProductVariation", mappedBy="variation", cascade={"persist", "remove"}, orphanRemoval=TRUE )
+     * @ORM\ManyToMany(targetEntity="Product", inversedBy="productVariations")
+     * @ORM\JoinTable(name="products_variations",
+     *      joinColumns={@ORM\JoinColumn(name="product_variation_id", referencedColumnName="product_id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="product_id")}
+     * )
      */
     private $variationToProducts;
 
@@ -118,6 +126,14 @@ class Product
         if (!$this->attributes->contains($attribute)) {
             $this->attributes->add($attribute);
             $attribute->setProduct($this);
+        }
+    }
+
+    public function clearAttributes()
+    {
+        foreach($this->attributes as $attribute){
+            $this->attributes->removeElement($attribute);
+            $attribute->setProduct(null);
         }
     }
 
@@ -226,25 +242,29 @@ class Product
         return $this->productNumber;
     }
 
-    public function addProductVariations(ProductVariation $productVariation)
+    public function addProductVariations(Product $product)
     {
-        if (!$this->productVariations->contains($productVariation)) {
-            $this->productVariations->add($productVariation);
-            $productVariation->setProduct($this);
+
+        if (!$this->productVariations->contains($product)) {
+            $this->productVariations->add($product);
+            $product->addVariationToProducts($this);
         }
     }
 
-    public function removeProductVariations(ProductVariation $productVariation)
+    public function removeProductVariations(Product $product)
     {
-        if ($this->productVariations->contains($productVariation)) {
-            $this->productVariations->removeElement($productVariation);
-            $productVariation->setProduct(null);
+        if ($this->productVariations->contains($product)) {
+            $this->productVariations->removeElement($product);
+            $product->removeVariationToProducts($this);
         }
     }
 
     public function clearProductVariations()
     {
-        $this->getProductVariations()->clear();
+        foreach($this->productVariations as $variation){
+            $this->productVariations->removeElement($variation);
+            $variation->removeVariationToProducts($this);
+        }
     }
 
     /**
@@ -263,6 +283,14 @@ class Product
         return $this->productVariations;
     }
 
+    public function getProductVariationsAssoc(){
+        $assoc = array();
+        foreach($this->productVariations as $product){
+            $assoc[$product->getProductId()] = $product->getProductNumber();
+        }
+        return $assoc;
+    }
+
     public function getPrice()
     {
         foreach ($this->attributes as $attribute) {
@@ -272,25 +300,28 @@ class Product
         return false;
     }
 
-    public function addRelatedProducts(RelatedProduct $relatedProduct)
+    public function addRelatedProducts(Product $product)
     {
-        if (!$this->relatedProducts->contains($relatedProduct)) {
-            $this->relatedProducts->add($relatedProduct);
-            $relatedProduct->setProduct($this);
+        if (!$this->relatedProducts->contains($product)) {
+            $this->relatedProducts->add($product);
+            $product->addRelatedToProducts($this);
         }
     }
 
-    public function removeRelatedProducts(RelatedProduct $relatedProduct)
+    public function removeRelatedProducts(Product $product)
     {
-        if ($this->relatedProducts->contains($relatedProduct)) {
-            $this->relatedProducts->removeElement($relatedProduct);
-            $relatedProduct->setProduct(null);
+        if ($this->relatedProducts->contains($product)) {
+            $this->relatedProducts->removeElement($product);
+            $product->removeRelatedToProducts($this);
         }
     }
 
     public function clearRelatedProducts()
     {
-        $this->getRelatedProducts()->clear();
+        foreach($this->relatedProducts as $related){
+            $this->relatedProducts->removeElement($related);
+            $related->removeRelatedToProducts($this);
+        }
     }
 
     /**
@@ -317,6 +348,14 @@ class Product
         return $this->relatedProducts;
     }
 
+    public function getRelatedProductsAssoc(){
+        $assoc = array();
+        foreach($this->relatedProducts as $product){
+            $assoc[$product->getProductId()] = $product->getProductNumber();
+        }
+        return $assoc;
+    }
+
     /**
      * @param mixed $relatedToProducts
      */
@@ -333,19 +372,17 @@ class Product
         return $this->relatedToProducts;
     }
 
-    public function addRelatedToProducts(RelatedProduct $product)
+    public function addRelatedToProducts(Product $product)
     {
         if (!$this->relatedToProducts->contains($product)) {
             $this->relatedToProducts->add($product);
-            $product->setRelatedProduct($this);
         }
     }
 
-    public function removeRelatedToProducts(RelatedProduct $product)
+    public function removeRelatedToProducts(Product $product)
     {
         if ($this->relatedToProducts->contains($product)) {
             $this->relatedToProducts->removeElement($product);
-            $product->setRelatedProduct(null);
         }
     }
 
@@ -400,19 +437,17 @@ class Product
         return $this->variationToProducts;
     }
 
-    public function addVariationToProducts(ProductVariation $productVariation)
+    public function addVariationToProducts(Product $product)
     {
-        if (!$this->variationToProducts->contains($productVariation)) {
-            $this->variationToProducts->add($productVariation);
-            $productVariation->setVariation($this);
+        if (!$this->variationToProducts->contains($product)) {
+            $this->variationToProducts->add($product);
         }
     }
 
-    public function removeVariationToProducts(ProductVariation $productVariation)
+    public function removeVariationToProducts(Product $product)
     {
-        if ($this->variationToProducts->contains($productVariation)) {
-            $this->variationToProducts->removeElement($productVariation);
-            $productVariation->setVariation(null);
+        if ($this->variationToProducts->contains($product)) {
+            $this->variationToProducts->removeElement($product);
         }
     }
 

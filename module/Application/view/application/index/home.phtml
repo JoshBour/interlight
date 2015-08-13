@@ -5,12 +5,10 @@
          * @var \Application\Entity\Slide $slide
          */
         foreach ($this->slides as $key => $slide):
-            $post = $slide->getPost();
-            $thumbnail = $slide->getThumbnail() ? '/slides/' . $slide->getThumbnail() : '/posts/' . $post->getThumbnail();
             ?>
             <div class="slide<?php echo $key == 0 ? " activeSlide" : ""; ?>">
-                <a href="<?php echo $this->url('post_view', array("postUrl" => $post->getUrl())); ?>">
-                    <img src="<?php echo $this->basePath('images/' . $thumbnail); ?>" alt="slide image"/>
+                <a href="<?php echo $slide->getUrl(); ?>" target="_blank">
+                    <img src="<?php echo $this->basePath('images/slides/' . $slide->getThumbnail()); ?>" alt="slide image"/>
                 </a>
                 <div id="slideCaption"><?php echo $slide->getCaption(); ?></div>
             </div>

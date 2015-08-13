@@ -8,11 +8,12 @@
 }
 
 #logo a img{
-    height: 70px;
+    height: 60px;
     margin-right:18px;
     display: inline-block;
-    width: 81px;
+    width: 200px;
     position: absolute;
+    text-indent:-9999px;
     right: 0;
 }
 

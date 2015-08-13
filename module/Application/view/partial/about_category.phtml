@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @var \Application\Entity\AboutCategory $aboutCategory
+ */
+$content = $aboutCategory->getContent();
+?>
+<div class="tableColumn">
+    <div data-attribute="aboutCategoryId">
+        <span class="tableCellText"><?php echo $aboutCategory->getAboutCategoryId(); ?></span>
+    </div>
+    <div data-attribute="title">
+        <span class="tableCellText"><?php echo $aboutCategory->getTitle(); ?></span>
+    </div>
+    <div data-attribute="content" data-type="textarea">
+        <div class="tableCellText"><?php echo $content ? htmlentities($content) : "-"; ?></div>
+    </div>
+</div>

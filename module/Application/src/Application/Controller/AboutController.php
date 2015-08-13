@@ -22,6 +22,7 @@ use Zend\Http\Request;
 class AboutController extends BaseController
 {
     const LAYOUT_ADMIN = "layout/admin";
+    const ROUTE_ADD_ABOUT_CATEGORY = "about/add";
 
     private $aboutCategoryForm;
 
@@ -48,10 +49,34 @@ class AboutController extends BaseController
             "aboutCategories" => $aboutCategories,
             "aboutCategory" => $aboutCategory,
             "activeCategory" => $category,
-            "bodyClass" => "aboutPage",
+            "bodyClass" => "aboutPage blackLayout",
             "useBlackLayout" => true,
             "pageTitle" => "Interlight - About Us"
         ));
+    }
+
+    public function loadAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $params = $request->getQuery();
+
+            $service = $this->getAboutCategoryService();
+
+
+            $limit = $params->get("limit", 10);
+            $page = $params->get("page", 1);
+            $sort = $params->get("sort",null);
+            $search = $params->get("search",null);
+
+
+            $viewModel = new ViewModel(array(
+                "paginator" => $service->load($limit, $page, $sort, $search),
+            ));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+        return $this->notFoundAction();
     }
 
     public function listAction()
@@ -59,8 +84,7 @@ class AboutController extends BaseController
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
             return new ViewModel(array(
-                "aboutCategories" => $this->getAboutCategoryRepository()->findAll(),
-                "form" => $this->getAboutCategoryForm()
+                "paginator" => $this->getAboutCategoryService()->load(),
             ));
         }
         return $this->notFoundAction();
@@ -69,37 +93,39 @@ class AboutController extends BaseController
     public function addAction()
     {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
-            $service = $this->getAboutCategoryService();
+        if ($this->identity()) {
+            $this->layout()->setTemplate(self::LAYOUT_ADMIN);
+            $form = $this->getAboutCategoryForm();
             if ($request->isPost()) {
-                $data = $request->getPost();
-                $form = $this->getAboutCategoryForm();
-                if ($service->create($data, $form)) {
-                    $this->flashMessenger()->addMessage($this->translate($this->vocabulary["MESSAGE_SLIDE_CREATED"]));
-                    return new JsonModel(array('redirect' => true));
-                } else {
-                    $viewModel = new ViewModel(array("form" => $form));
-                    $viewModel->setTerminal(true);
-                    return $viewModel;
+                $service = $this->getAboutCategoryService();
+                if ($service->create($request->getPost(), $form)) {
+                    $this->flashMessenger()->addMessage($service->getMessage());
+
+                    return $this->redirect()->toRoute(self::ROUTE_ADD_ABOUT_CATEGORY);
                 }
             }
+            return new ViewModel(array(
+                "form" => $form,
+                "activeRoute" => "about",
+                "pageTitle" => "Interlight - Add About Category"
+            ));
         }
         return $this->notFoundAction();
     }
 
     public function saveAction()
     {
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $success = 1;
-            $message = $this->translate($this->vocabulary["MESSAGE_ABOUT_CATEGORIES_SAVED"]);
-            $entities = $this->params()->fromPost('entities');
-            if (!$this->getAboutCategoryService()->save($entities)) {
-                $success = 0;
-                $message = $this->translate($this->vocabulary["ERROR_ABOUT_CATEGORIES_NOT_SAVED"]);
-            }
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $aboutService = $this->getAboutCategoryService();
+            $data = $request->getPost();
+            $success = $aboutService->save($data) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $aboutService->getMessage()
             ));
         } else {
             return $this->notFoundAction();
@@ -109,17 +135,12 @@ class AboutController extends BaseController
     public function removeAction()
     {
         if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $id = $this->params()->fromPost("id");
-            $success = 0;
-            $message = $this->translate($this->vocabulary["MESSAGE_ABOUT_CATEGORY_REMOVED"]);
-            if ($this->getAboutCategoryService()->remove($id)) {
-                $success = 1;
-            } else {
-                $message = $this->translate($this->vocabulary["ERROR_ABOUT_CATEGORY_NOT_REMOVED"]);
-            }
+            $id = $this->params()->fromPost("entityId");
+            $aboutService = $this->getAboutCategoryService();
+            $success = $aboutService->remove($id) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $aboutService->getMessage()
             ));
         }
         return $this->notFoundAction();
@@ -141,12 +162,12 @@ class AboutController extends BaseController
     public function getAboutCategoryRepository()
     {
         if (null === $this->aboutCategoryRepository)
-            $this->aboutCategoryRepository = $this->getRepository('application','aboutCategory');
+            $this->aboutCategoryRepository = $this->getRepository('application', 'aboutCategory');
         return $this->aboutCategoryRepository;
     }
 
     /**
-     * @return \Application\Service\AboutCategory
+     * @return \Application\Service\AboutCategoryService
      */
     public function getAboutCategoryService()
     {

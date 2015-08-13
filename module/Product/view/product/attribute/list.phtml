@@ -1,0 +1,20 @@
+<div class="tableWrapper" data-entity="attributes">
+    <?php echo $this->partial("table_options", array(
+        "paginator" => $this->paginator,
+        "location" => "attributes"
+    )); ?>
+    <div class="tableHeader">
+        <div class="tableColumn">
+            <span>Id</span>
+            <span class="sortable"><?php echo $this->translate("Name"); ?></span>
+        </div>
+    </div><!--
+    --><div class="tableBody">
+        <?php
+        foreach ($this->paginator as $attribute)
+            echo $this->partial('attribute', array(
+                "attribute" => $attribute
+            ));
+        ?>
+    </div>
+</div>

@@ -6,3 +6,5 @@ autoload.php
 symfony
 doctrine
 ircmaxell
+ckeditor
+bettertable

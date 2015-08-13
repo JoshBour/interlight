@@ -1,53 +1,46 @@
-<?php
-$form->prepare();
-/**
- * @var \Zend\Form\Fieldset $fieldset
- */
-$fieldset = $form->get('slide');
-$form->setAttribute('action', $this->url('slides/add'));
-echo $this->form()->openTag($form);
-//echo $this->formHidden($form->get('security'));
-?>
-<table>
-    <thead>
-    <tr>
-        <th><?php echo $this->translate("Post"); ?>*</th>
-        <th><?php echo $this->translate("Position"); ?>*</th>
-        <th><?php echo $this->translate("Caption"); ?>*</th>
-        <th><?php echo $this->translate("Thumbnail"); ?></th>
-        <th><?php echo $this->translate("Add"); ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-            <?php
-            echo $this->formSelect($fieldset->get('post'));
-            echo $this->formElementErrors($fieldset->get('post'), array('class' => 'formError'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formInput($fieldset->get('position'));
-            echo $this->formElementErrors($fieldset->get('position'), array('class' => 'formError'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formInput($fieldset->get('caption'));
-            echo $this->formElementErrors($fieldset->get('caption'), array('class' => 'formError'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formFile($fieldset->get('thumbnail'));
-            echo $this->formElementErrors($fieldset->get('thumbnail'), array('class' => 'formError'));
-            ?>
-        </td>
-        <td>
-            <?php echo $this->formSubmit($form->get('submit')->setValue($this->translate('Add'))); ?>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<?php echo $this->form()->closeTag() ?>
+<div class="formWrapper">
+    <h2>Add a new Slide</h2>
+    <?php
+    $form->prepare();
+    /**
+     * @var \Zend\Form\Fieldset $fieldset
+     */
+    $fieldset = $form->get('slide');
+    $form->setAttribute('action', $this->url('slides/add'));
+    echo $this->form()->openTag($form);
+    ?>
+    <div class="element">
+        <?php
+        $url = $fieldset->get('url');
+        echo $this->formLabel($url);
+        echo $this->formElementErrors($url, array('class' => 'formError'));
+        echo $this->formInput($url);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $position = $fieldset->get('position');
+        echo $this->formLabel($position);
+        echo $this->formElementErrors($position, array('class' => 'formError'));
+        echo $this->formInput($position);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $caption = $fieldset->get('caption');
+        echo $this->formLabel($caption);
+        echo $this->formElementErrors($caption, array('class' => 'formError'));
+        echo $this->formInput($caption);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $thumbnail = $fieldset->get('thumbnail');
+        echo $this->formLabel($thumbnail);
+        echo $this->formElementErrors($thumbnail, array('class' => 'formError'));
+        echo $this->formFile($thumbnail);
+        ?>
+    </div>
+    <?php echo $this->formSubmit($form->get('submit')->setValue($this->translate('Add'))); ?>
+    <?php echo $this->form()->closeTag() ?>
+</div>

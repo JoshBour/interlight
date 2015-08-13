@@ -10,6 +10,7 @@ namespace Product\Controller;
 
 
 use Application\Controller\BaseController;
+use Application\Validator\Image;
 use Zend\Http\Request;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -24,6 +25,7 @@ class CategoryController extends BaseController
 {
 
     const LAYOUT_ADMIN = "layout/admin";
+    const ROUTE_ADD_CATEGORY = "categories/add";
 
     /**
      * The category form
@@ -42,7 +44,7 @@ class CategoryController extends BaseController
     /**
      * The category service
      *
-     * @var \Product\Service\Category
+     * @var \Product\Service\CategoryService
      */
     private $categoryService;
 
@@ -70,15 +72,39 @@ class CategoryController extends BaseController
         return $this->notFoundAction();
     }
 
+    public function loadAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $params = $request->getQuery();
+
+            $service = $this->getCategoryService();
+
+
+            $limit = $params->get("limit", 10);
+            $page = $params->get("page", 1);
+            $sort = $params->get("sort",null);
+            $search = $params->get("search",null);
+
+
+            $viewModel = new ViewModel(array(
+                "paginator" => $service->load($limit, $page, $sort, $search),
+                "categoriesSelect" => $this->getCategoryRepository()->findNameAndId(),
+            ));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+        return $this->notFoundAction();
+    }
+
     public function listAction()
     {
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
-            $this->getService('fileUtil')->clearTempFiles();
             $categoryRepository = $this->getCategoryRepository();
             return new ViewModel(array(
-                "categories" => $categoryRepository->findAll(),
-                "form" => $this->getCategoryForm()
+                "paginator" => $this->getCategoryService()->load(),
+                "categoriesSelect" => $categoryRepository->findNameAndId(),
             ));
         }
         return $this->notFoundAction();
@@ -86,68 +112,63 @@ class CategoryController extends BaseController
 
     public function addAction()
     {
-        /**
-         * @var \Zend\Http\Request $request
-         */
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
-            $service = $this->getCategoryService();
+        if ($this->identity()) {
+            $this->layout()->setTemplate(self::LAYOUT_ADMIN);
+            $form = $this->getCategoryForm();
             if ($request->isPost()) {
+                $service = $this->getCategoryService();
                 $data = array_merge_recursive(
                     $request->getPost()->toArray(),
                     $request->getFiles()->toArray()
                 );
-                $form = $this->getCategoryForm();
                 if ($service->create($data, $form)) {
-                    $this->flashMessenger()->addMessage($this->translate($this->vocabulary["MESSAGE_CATEGORY_CREATED"]));
-                    return new JsonModel(array('redirect' => true));
-                } else {
-                    $viewModel = new ViewModel(array("form" => $form));
-                    $viewModel->setTerminal(true);
-                    return $viewModel;
+                    $this->flashMessenger()->addMessage($service->getMessage());
+
+                    return $this->redirect()->toRoute(self::ROUTE_ADD_CATEGORY);
                 }
             }
+            return new ViewModel(array(
+                "form" => $form,
+                "activeRoute" => "categories",
+                "pageTitle" => "Interlight - Add Category"
+            ));
         }
         return $this->notFoundAction();
     }
 
     public function saveAction()
     {
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $success = 1;
-            $message = $this->translate($this->vocabulary["MESSAGE_CATEGORIES_SAVED"]);
-            $entities = $this->params()->fromPost('entities');
-            if (!$this->getCategoryService()->save($entities)) {
-                $success = 0;
-                $message = $this->translate($this->vocabulary["ERROR_CATEGORIES_NOT_SAVED"]);
-            }
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $categoryService = $this->getCategoryService();
+            $data = $request->getPost();
+            $success = $categoryService->save($data) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $categoryService->getMessage()
             ));
         } else {
             return $this->notFoundAction();
         }
     }
 
-    public function removeAction()
+    public function deleteAction()
     {
         /**
          * @var \Zend\Http\Request $request
          */
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest() && $this->identity()) {
-            $id = $this->params()->fromPost("id");
-            $success = 0;
-            $message = $this->translate($this->vocabulary["MESSAGE_CATEGORY_REMOVED"]);
-            if ($this->getCategoryService()->remove($id)) {
-                $success = 1;
-            } else {
-                $message = $this->translate($this->vocabulary["ERROR_CATEGORY_NOT_REMOVED"]);
-            }
+            $id = $this->params()->fromPost("entityId");
+            $categoryService = $this->getCategoryService();
+            $success = $categoryService->remove($id) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $categoryService->getMessage()
             ));
         }
         return $this->notFoundAction();
@@ -173,14 +194,14 @@ class CategoryController extends BaseController
     public function getCategoryRepository()
     {
         if (null === $this->categoryRepository)
-            $this->categoryRepository = $this->getRepository('product','category');
+            $this->categoryRepository = $this->getRepository('product', 'category');
         return $this->categoryRepository;
     }
 
     /**
      * Get the category service
      *
-     * @return \Product\Service\Category
+     * @return \Product\Service\CategoryService
      */
     public function getCategoryService()
     {

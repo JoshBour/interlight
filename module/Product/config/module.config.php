@@ -18,35 +18,53 @@ return array(
     'router' => array(
         'routes' => array(
             'attributes' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'literal',
                 'options' => array(
                     'route' => '/admin/attributes',
                     'defaults' => array(
                         'controller' => __NAMESPACE__ . '\Controller\Attribute',
-                        'action' => 'index',
+                        'action' => 'list',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-                    'add' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                    'load' => array(
+                        'type' => 'segment',
                         'options' => array(
-                            'route' => '/add',
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
                             'defaults' => array(
-                                'action' => 'add',
-                            ),
+                                'action' => 'load'
+                            )
                         )
                     ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/update',
+                            'route' => '/save',
                             'defaults' => array(
-                                'action' => 'update',
-                            ),
+                                'action' => 'save'
+                            )
                         )
                     ),
-                ),
+                    'add' => array(
+                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'options' => array(
+                            'route' => '/add',
+                            'defaults' => array(
+                                'action' => 'add'
+                            )
+                        )
+                    ),
+                    'delete' => array(
+                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'options' => array(
+                            'route' => '/delete',
+                            'defaults' => array(
+                                'action' => 'delete'
+                            )
+                        )
+                    )
+                )
             ),
             'products_index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
@@ -107,16 +125,32 @@ return array(
                 )
             ),
             'products' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'segment',
                 'options' => array(
                     'route' => '/admin/products',
                     'defaults' => array(
                         'controller' => __NAMESPACE__ . '\Controller\Index',
                         'action' => 'list',
+                        'page' => 1,
+                        'limit' => 10,
                     ),
+                    'constraints' => array(
+//                        'page' => '\d{1,}',
+//                        'limit' => '-1|5|10|25|50|100',
+//                        'sort' => '[a-zA-Z0-9_]+,asc|desc|ASC|DESC'
+                    )
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'load' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
+                            'defaults' => array(
+                                'action' => 'load'
+                            )
+                        )
+                    ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
@@ -135,12 +169,12 @@ return array(
                             )
                         )
                     ),
-                    'remove' => array(
+                    'delete' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/remove',
+                            'route' => '/delete',
                             'defaults' => array(
-                                'action' => 'remove'
+                                'action' => 'delete'
                             )
                         )
                     )
@@ -157,6 +191,15 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'load' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
+                            'defaults' => array(
+                                'action' => 'load'
+                            )
+                        )
+                    ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
@@ -175,12 +218,12 @@ return array(
                             )
                         )
                     ),
-                    'remove' => array(
+                    'delete' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/remove',
+                            'route' => '/delete',
                             'defaults' => array(
-                                'action' => 'remove'
+                                'action' => 'delete'
                             )
                         )
                     )
@@ -192,11 +235,22 @@ return array(
         'factories' => array(
             'productForm' => __NAMESPACE__ . '\Factory\ProductFormFactory',
             'categoryForm' => __NAMESPACE__ . '\Factory\CategoryFormFactory',
+            'attributeForm' => __NAMESPACE__ . '\Factory\AttributeFormFactory',
         ),
         'invokables' => array(
-            'productService' => __NAMESPACE__ . '\Service\Product',
-            'categoryService' => __NAMESPACE__ . '\Service\Category',
+            'productService' => __NAMESPACE__ . '\Service\ProductService',
+            'categoryService' => __NAMESPACE__ . '\Service\CategoryService',
+            'attributeService' => __NAMESPACE__ . '\Service\AttributeService',
+            'categoryFilter' => __NAMESPACE__ . '\Filter\CategoryFilter',
+            'productFilter' => __NAMESPACE__ . '\Filter\ProductFilter',
+            'attributeFilter' => __NAMESPACE__ . '\Filter\AttributeFilter'
         )
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'formAttributeSelect' => __NAMESPACE__ . '\Form\Helper\AttributeSelect',
+            'attributeSelect' => __NAMESPACE__ . '\View\Helper\AttributeSelect',
+        ),
     ),
     'controllers' => array(
         'invokables' => array(
@@ -211,6 +265,9 @@ return array(
         ),
         'template_map' => array(
             'product' => __DIR__ . '/../view/partial/product.phtml',
+            'admin_product' => __DIR__ . '/../view/partial/admin_product.phtml',
+            'category' => __DIR__ . '/../view/partial/category.phtml',
+            'attribute' => __DIR__ . '/../view/partial/attribute.phtml',
         ),
         'strategies' => array(
             'ViewJsonStrategy'

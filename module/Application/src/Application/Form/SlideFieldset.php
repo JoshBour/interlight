@@ -22,30 +22,47 @@ class SlideFieldset extends BaseFieldset implements InputFilterProviderInterface
     {
         parent::__construct("slide");
 
+        $vocabulary = $this->getVocabulary();
+
         $this->add(array(
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'post',
+            'name' => 'url',
+            'type' => 'text',
             'options' => array(
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => 'Post\Entity\Post',
-                'property' => 'title',
-                'disable_inarray_validator' => true
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_URL"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_URL"])
             ),
         ));
 
         $this->add(array(
             'name' => 'position',
             'type' => 'text',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_POSITION"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_POSITION"])
+            ),
         ));
 
         $this->add(array(
             'name' => 'caption',
             'type' => 'text',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_CAPTION"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_CAPTION"])
+            ),
         ));
 
         $this->add(array(
             'name' => 'thumbnail',
             'type' => 'file',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_SLIDE_THUMBNAIL"])
+            ),
         ));
     }
 
@@ -57,75 +74,14 @@ class SlideFieldset extends BaseFieldset implements InputFilterProviderInterface
      */
     public function getInputFilterSpecification()
     {
-        $vocabulary = $this->getVocabulary();
-        return array(
-            'post' => array(
-                'required' => true,
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'position' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_POSITION_EMPTY"])
-                            )
-                        )
-                    ),
-                    array(
-                        'name' => 'regex',
-                        'options' => array(
-                            'pattern' => '/^[0-9]{1,3}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => $this->getTranslator()->translate($vocabulary["ERROR_POSITION_INVALID"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'caption' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_CAPTION_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'thumbnail' => array(
-                'required' => false,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_THUMBNAIL_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
+        $filters = $this->getServiceLocator()->get('slideFilter')->getMergedFilters();
+        $filters["thumbnail"]["validators"][] = array(
+            'name' => 'Application\Validator\Image',
+            'options' => array(
+                'maxSize' => '40960',
             )
         );
+        return $filters;
     }
 
 

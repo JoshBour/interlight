@@ -1,7 +1,11 @@
 <?php
+/**
+ * @var \Product\Entity\Product $product
+ */
 $relatedProducts = $product->getRelatedProducts();
 $variations = $product->getProductVariations();
 $route = $this->routeName();
+$specifications = $product->getSpecifications(false);
 $params = array("productNumber" => $product->getProductNumber());
 $datasheet = $product->getDatasheet();
 if ($category)
@@ -11,12 +15,10 @@ $price = $product->getPrice();
 
 $productVariations = $product->getProductVariations()->toArray();
 if (count($productVariations) <= 0){
-    $productVariation  = new \Product\Entity\ProductVariation(1);
-    $productVariation->setVariation($product);
-    $productVariations[] = $productVariation;
+    $productVariations[] = $product;
 }else {
     uasort($productVariations, function ($a, $b) {
-        return $a->getPosition() > $b->getPosition();
+        return $a->getProductNumber() > $b->getProductNumber();
     });
 }
 ?>
@@ -40,8 +42,10 @@ if (count($productVariations) <= 0){
     <div class="productPhotos">
         <img class="productThumbnail magnifiable"
              src="<?php echo $this->basePath('images/products/' . $product->getThumbnail()); ?>"/>
+        <?php if($specifications): ?>
         <img class="productSpecifications magnifiable"
              src="<?php echo $this->basePath('images/products/' . $product->getSpecifications()); ?>"/>
+        <?php endif; ?>
     </div>
     <div itemscope itemtype="http://schema.org/Product" class="invisible">
         <span itemprop="name"><?php echo $product->getName(); ?></span>
@@ -76,7 +80,7 @@ if (count($productVariations) <= 0){
         <tr>
             <th>Product Number</th>
             <?php
-                $attributes = $productVariations[0]->getVariation()->getAttributes()->toArray();
+                $attributes = $productVariations[0]->getAttributes()->toArray();
             $attributeCount = count($attributes) + 1;
             usort($attributes, function ($a, $b) {
                 return $a->getPosition() > $b->getPosition();
@@ -93,8 +97,7 @@ if (count($productVariations) <= 0){
 //        uasort($productVariations, function ($a, $b) {
 //            return $a->getPosition() > $b->getPosition();
 //        });
-        foreach ($productVariations as $join):
-            $variation = $join->getVariation();
+        foreach ($productVariations as $variation):
             if (!$variation) continue;
             ?>
             <tr>

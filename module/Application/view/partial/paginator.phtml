@@ -1,0 +1,48 @@
+<?php
+/**
+ * @var \Zend\Paginator\Paginator $paginator
+ */
+
+$pages = $paginator->getPages()->pageCount;
+$current = $paginator->getCurrentPageNumber();
+?>
+<ul class="tablePagination" data-items="<?php echo $paginator->getTotalItemCount(); ?>">
+    <!-- Previous page link -->
+    <?php if ($current - 1 > 0): ?>
+        <li>
+            <a href="#?page=<?php echo $this->previous; ?>"><<</a>
+        </li>
+    <?php else: ?>
+        <li>
+            <span class="disabled">Previous</span>
+        </li>
+    <?php endif; ?>
+
+    <!-- Numbered page links -->
+    <?php for ($i = 0; $i < $pages; $i++): ?>
+        <?php if ($i != $paginator->getCurrentPageNumber()): ?>
+            <li>
+                <a href="#?page=<?php echo $i; ?>">
+                    <?php echo $i; ?>
+                </a>
+            </li>
+        <?php else: ?>
+            <li class="active">
+                <a href="#?"><?php echo $i; ?></a>
+            </li>
+        <?php endif; ?>
+    <?php endfor; ?>
+
+    <!-- Next page link -->
+    <?php if ($current+1 < $pages): ?>
+        <li>
+            <a href="#?page=<?php echo $this->next; ?>">
+                >>
+            </a>
+        </li>
+    <?php else: ?>
+        <li>
+            <span class="disabled">Next</span>
+        </li>
+    <?php endif; ?>
+</ul>

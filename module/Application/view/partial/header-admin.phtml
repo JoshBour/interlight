@@ -3,7 +3,7 @@
     $child = $this->child;
     $isMobile = $this->mobile();
     $route = $this->routeName();
-    $pageTitle = (isset($child->pageTitle)) ? $child->pageTitle : "Info - " . ucfirst($route);
+    $pageTitle = (isset($child->pageTitle)) ? $child->pageTitle : "Interlight - " . ucfirst($route);
     $follow = (isset($child->follow)) ? "noindex, nofollow" : "feed, follow, archieve";
 
     // The website's title.
@@ -27,15 +27,19 @@
     // We add the favicon and our stylesheets
     $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath('images/favicon.ico')))
          ->headLink(array('rel' => 'gettext', 'type' => 'application/x-po', 'href' => $this->basePath('module/Application/language/'.$this->plugin('translate')->getTranslator()->getLocale().'.po')))
-        ->appendStylesheet($this->basePath('css/jquery.dataTables.min.css'))
-        ->appendStylesheet($this->basePath('css/scedit/jquery.sceditor.default.min.css'))
-        ->appendStylesheet($this->basePath('css/scedit/default.min.css'))
-        ->appendStylesheet($this->basePath('css/admin-style'. (APPLICATION_ENV == "development" ? "":".min") . '.css'));
+        ->appendStylesheet($this->basePath('css/normalize'. (APPLICATION_ENV == "development" ? "":".min") . '.css'))
+        ->appendStylesheet($this->basePath('vendor/bettertable/css/bettertable'. (APPLICATION_ENV == "development" ? "":".min") . '.css'))
+        ->appendStylesheet($this->basePath('vendor/bettertable/css/jquery.selectbox'. (APPLICATION_ENV == "development" ? "":".min") . '.css'))
+        ->appendStylesheet($this->basePath('vendor/bettertable/css/jquery.datetimepicker'. (APPLICATION_ENV == "development" ? "":".min") . '.css'))
+        ->appendStylesheet($this->basePath('css/admin/admin-style'. (APPLICATION_ENV == "development" ? "":".min") . '.css'));
+
+    $this->headScript()->appendFile($this->basePath('js/modernizr.min.js'));
 
 //    if ($isMobile) {
 //        $this->headLink()->appendStylesheet($this->basePath('css/mobile.css'));
 //    }
     echo $this->headLink();
+    echo $this->headScript();
 
     // Some scripts the must be outputted first follow below
     ?>

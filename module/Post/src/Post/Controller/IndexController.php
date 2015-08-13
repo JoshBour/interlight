@@ -25,6 +25,7 @@ use Zend\View\Model\ViewModel;
 class IndexController extends BaseController
 {
     const LAYOUT_ADMIN = "layout/admin";
+    const ROUTE_ADD_POST = "posts/add";
 
     /**
      * The post form
@@ -43,7 +44,7 @@ class IndexController extends BaseController
     /**
      * Get the post service
      *
-     * @var \Post\Service\Post
+     * @var \Post\Service\PostService
      */
     private $postService;
 
@@ -54,9 +55,8 @@ class IndexController extends BaseController
         $posts->setCurrentPageNumber($page)
             ->setItemCountPerPage(6);
         return new ViewModel(array(
-            "useBlackLayout" => true,
             "pageTitle" => "Interlight - Latest News",
-            "bodyClass" => "postsPage",
+            "bodyClass" => "postsPage blackLayout",
             "posts" => $posts,
         ));
     }
@@ -68,7 +68,7 @@ class IndexController extends BaseController
             $post = $this->getPostRepository()->findOneBy(array("url" => $postUrl));
             if ($post) {
                 return new ViewModel(array(
-                    "useBlackLayout" => true,
+                    "bodyClass" => "blackLayout",
                     "post" => $post,
                     "activeRoute" => "posts_index",
                     "pageTitle" => "Interlight - " . $post->getTitle()
@@ -78,15 +78,36 @@ class IndexController extends BaseController
         return $this->notFoundAction();
     }
 
+    public function loadAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $params = $request->getQuery();
+
+            $service = $this->getPostService();
+
+
+            $limit = $params->get("limit", 10);
+            $page = $params->get("page", 1);
+            $sort = $params->get("sort",null);
+            $search = $params->get("search",null);
+
+
+            $viewModel = new ViewModel(array(
+                "paginator" => $service->load($limit, $page, $sort, $search),
+            ));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+        return $this->notFoundAction();
+    }
+
     public function listAction()
     {
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
-            $this->getService('fileUtil')->clearTempFiles();
-            $postRepository = $this->getPostRepository();
             return new ViewModel(array(
-                "posts" => $postRepository->findAll(),
-                "form" => $this->getPostForm()
+                "paginator" => $this->getPostService()->load(),
             ));
         }
         return $this->notFoundAction();
@@ -94,68 +115,63 @@ class IndexController extends BaseController
 
     public function addAction()
     {
-        /**
-         * @var \Zend\Http\Request $request
-         */
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
-            $service = $this->getPostService();
+        if ($this->identity()) {
+            $this->layout()->setTemplate(self::LAYOUT_ADMIN);
+            $form = $this->getPostForm();
             if ($request->isPost()) {
+                $service = $this->getPostService();
                 $data = array_merge_recursive(
                     $request->getPost()->toArray(),
                     $request->getFiles()->toArray()
                 );
-                $form = $this->getPostForm();
                 if ($service->create($data, $form)) {
-                    $this->flashMessenger()->addMessage($this->translate($this->vocabulary["MESSAGE_POST_CREATED"]));
-                    return new JsonModel(array('redirect' => true));
-                } else {
-                    $viewModel = new ViewModel(array("form" => $form));
-                    $viewModel->setTerminal(true);
-                    return $viewModel;
+                    $this->flashMessenger()->addMessage($service->getMessage());
+
+                    return $this->redirect()->toRoute(self::ROUTE_ADD_POST);
                 }
             }
+            return new ViewModel(array(
+                "form" => $form,
+                "activeRoute" => "posts",
+                "pageTitle" => "Interlight - Add Post"
+            ));
         }
         return $this->notFoundAction();
     }
 
     public function saveAction()
     {
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $success = 1;
-            $message = $this->translate($this->vocabulary["MESSAGE_POSTS_SAVED"]);
-            $entities = $this->params()->fromPost('entities');
-            if (!$this->getPostService()->save($entities)) {
-                $success = 0;
-                $message = $this->translate($this->vocabulary["ERROR_POSTS_NOT_SAVED"]);
-            }
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $postService = $this->getPostService();
+            $data = $request->getPost();
+            $success = $postService->save($data) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $postService->getMessage()
             ));
         } else {
             return $this->notFoundAction();
         }
     }
 
-    public function removeAction()
+    public function deleteAction()
     {
         /**
          * @var \Zend\Http\Request $request
          */
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest() && $this->identity()) {
-            $id = $this->params()->fromPost("id");
-            $success = 0;
-            $message = $this->translate($this->vocabulary["MESSAGE_POST_REMOVED"]);
-            if ($this->getPostService()->remove($id)) {
-                $success = 1;
-            } else {
-                $message = $this->translate($this->vocabulary["ERROR_POST_NOT_REMOVED"]);
-            }
+            $id = $this->params()->fromPost("entityId");
+            $postService = $this->getPostService();
+            $success = $this->getPostService()->remove($id) ? 1:0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $postService->getMessage()
             ));
         }
         return $this->notFoundAction();
@@ -181,14 +197,14 @@ class IndexController extends BaseController
     public function getPostRepository()
     {
         if (null === $this->postRepository)
-            $this->postRepository = $this->getRepository('post','post');
+            $this->postRepository = $this->getRepository('post', 'post');
         return $this->postRepository;
     }
 
     /**
      * Get the post service
      *
-     * @return \Post\Service\Post
+     * @return \Post\Service\PostService
      */
     public function getPostService()
     {

@@ -1,108 +1,97 @@
-<?php
-echo $this->showMessages();
+<div class="formWrapper">
+    <h2>Add a new Product</h2>
+    <?php
+    echo $this->showMessages();
 
-$form->prepare();
-/**
- * @var \Zend\Form\Fieldset $fieldset
- */
-$fieldset = $form->get('product');
-$form->setAttribute('action', $this->url('products/add'));
-echo $this->form()->openTag($form);
-//echo $this->formHidden($form->get('security'));
-?>
-<table>
-    <thead>
-    <tr>
-        <th><?php echo $this->translate("Product Number"); ?>*</th>
-        <th><?php echo $this->translate("Name"); ?>*</th>
-        <th><?php echo $this->translate("Description"); ?>*</th>
-        <th><?php echo $this->translate("Attributes"); ?>*</th>
-        <th><?php echo $this->translate("Datasheet"); ?></th>
-        <th><?php echo $this->translate("Thumbnail"); ?></th>
-        <th><?php echo $this->translate("Specifications"); ?></th>
-        <th><?php echo $this->translate("Related Products"); ?></th>
-        <th><?php echo $this->translate("Product Variations"); ?></th>
-        <th><?php echo $this->translate("Category"); ?></th>
-        <th><?php echo $this->translate("Add"); ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-            <?php
-            echo $this->formElementErrors($fieldset->get('productNumber'), array('class' => 'formError'));
-            echo $this->formInput($fieldset->get('productNumber'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formElementErrors($fieldset->get('name'), array('class' => 'formError'));
-            echo $this->formInput($fieldset->get('name'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formElementErrors($fieldset->get('description'), array('class' => 'formError'));
-            echo $this->formTextarea($fieldset->get('description'));
-            ?>
-        </td>
-        <td>
-            <div class="attributeGuide invisible">
-                <span class="attributeId invisible exclude">Id</span>
-                <span class="name">Name</span>
-                <span class="value">Value</span>
-                <span class="position">Position</span>
-            </div>
-            <ul class="attributes invisible dynamicList">
-            </ul>
-            <span class="editAttributes editButton">Edit</span>
-        </td>
-        <td>
-            <?php
-            echo $this->formElementErrors($fieldset->get('datasheet'), array('class' => 'formError'));
-            echo $this->formFile($fieldset->get('datasheet'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formElementErrors($fieldset->get('thumbnail'), array('class' => 'formError'));
-            echo $this->formFile($fieldset->get('thumbnail'));
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->formElementErrors($fieldset->get('specifications'), array('class' => 'formError'));
-            echo $this->formFile($fieldset->get('specifications'));
-            ?>
-        </td>
-        <td>
-            <div class="attributeGuide invisible">
-                <span class="productNumber">Product Number</span>
-                <span class="position">Position</span>
-            </div>
-            <ul class="relatedProducts invisible dynamicList">
-            </ul>
-            <span class="editAttributes editButton">Edit</span>
-        </td>
-        <td>
-            <div class="attributeGuide invisible">
-                <span class="productNumber">Product Number</span>
-                <span class="position">Position</span>
-            </div>
-            <ul class="productVariations invisible dynamicList">
-            </ul>
-            <span class="editAttributes editButton">Edit</span>
-        </td>
-        <td>
-            <?php
-            echo $this->formSelect($fieldset->get('category'));
-            echo $this->formElementErrors($fieldset->get('category'), array('class' => 'formError'));
-            ?>
-        </td>
-        <td>
-            <?php echo $this->formSubmit($form->get('submit')->setValue($this->translate('Add'))); ?>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<?php echo $this->form()->closeTag() ?>
+    $form->prepare();
+    /**
+     * @var \Zend\Form\Fieldset $fieldset
+     */
+    $fieldset = $form->get('product');
+    $form->setAttribute('action', $this->url('products/add'));
+    echo $this->form()->openTag($form);
+    //echo $this->formHidden($form->get('security'));
+    ?>
+    <div class="element">
+        <?php
+        $productNumber = $fieldset->get('productNumber');
+        echo $this->formLabel($productNumber);
+        echo $this->formElementErrors($productNumber, array('class' => 'formError'));
+        echo $this->formInput($productNumber);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $name = $fieldset->get('name');
+        echo $this->formLabel($name);
+        echo $this->formElementErrors($name, array('class' => 'formError'));
+        echo $this->formInput($name);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $description = $fieldset->get('description');
+        echo $this->formLabel($description);
+        echo $this->formElementErrors($description, array('class' => 'formError'));
+        echo $this->formTextarea($description);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $attributes = $fieldset->get('attributes');
+        echo $this->formLabel($attributes);
+        echo $this->formElementErrors($attributes, array('class' => 'formError'));
+        echo $this->formAttributeSelect($attributes,$encodedAttributes);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $datasheet = $fieldset->get('datasheet');
+        echo $this->formLabel($datasheet);
+        echo $this->formElementErrors($datasheet, array('class' => 'formError'));
+        echo $this->formFile($datasheet);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $thumbnail = $fieldset->get('thumbnail');
+        echo $this->formLabel($thumbnail);
+        echo $this->formElementErrors($thumbnail, array('class' => 'formError'));
+        echo $this->formFile($thumbnail);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $specifications = $fieldset->get('specifications');
+        echo $this->formLabel($specifications);
+        echo $this->formElementErrors($specifications, array('class' => 'formError'));
+        echo $this->formFile($specifications);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $relatedProducts = $fieldset->get('relatedProducts');
+        echo $this->formLabel($relatedProducts);
+        echo $this->formElementErrors($relatedProducts, array('class' => 'formError'));
+        echo $this->formSelect($relatedProducts);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $productVariations = $fieldset->get('productVariations');
+        echo $this->formLabel($productVariations);
+        echo $this->formElementErrors($productVariations, array('class' => 'formError'));
+        echo $this->formSelect($productVariations);
+        ?>
+    </div>
+    <div class="element">
+        <?php
+        $category = $fieldset->get('category');
+        echo $this->formLabel($category);
+        echo $this->formElementErrors($category, array('class' => 'formError'));
+        echo $this->formSelect($category);
+        ?>
+    </div>
+    <?php echo $this->formSubmit($form->get('submit')->setValue($this->translate('Add'))); ?>
+    <?php echo $this->form()->closeTag() ?>
+</div>

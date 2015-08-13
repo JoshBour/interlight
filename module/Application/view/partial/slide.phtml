@@ -1,0 +1,27 @@
+<?php
+/**
+ * @var \Application\Entity\Slide $slide
+ */
+$thumbnail = $slide->getThumbnail();
+$caption = $slide->getCaption();
+?>
+<div class="tableColumn">
+    <div data-attribute="slideId">
+        <span class="tableCellText"><?php echo $slide->getSlideId(); ?></span>
+    </div>
+    <div data-attribute="url">
+        <span class="tableCellText"><?php echo $slide->getUrl(); ?></span>
+    </div>
+    <div data-attribute="position">
+        <span class="tableCellText"><?php echo $slide->getPosition(); ?></span>
+    </div>
+    <div data-attribute="caption">
+        <span class="tableCellText"><?php echo $caption ? $caption : '-' ?></span>
+    </div>
+    <div data-attribute="thumbnail" data-type="image">
+        <span class="tableCellMeta">{"location":"images/slides","current" : "<?php echo $thumbnail; ?>", "prefix": "slide"}</span>
+                    <span class="tableCellText">
+                        <?php echo $thumbnail ? '<img src="' . $this->basePath('images/slides/' . $thumbnail) . '" alt="' . $this->translate("slide image") . '" />' : '-'; ?>
+                    </span>
+    </div>
+</div>

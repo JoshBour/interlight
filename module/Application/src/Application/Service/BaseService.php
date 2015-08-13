@@ -13,7 +13,7 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Application\Service\Cache;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
-class BaseService implements ServiceManagerAwareInterface
+abstract class BaseService implements ServiceManagerAwareInterface
 {
 
     /**
@@ -72,6 +72,13 @@ class BaseService implements ServiceManagerAwareInterface
 //        $namespace = ucfirst($variables[0]);
 //        return $this->getEntityManager()->getRepository("{$namespace}\\Entity\\{$entity}");
 //    }
+    /**
+     * @param $name
+     * @return BaseService
+     */
+    protected function getService($name){
+        return $this->getServiceManager()->get(($name) . 'Service');
+    }
 
     /**
      * Get the repository for a given entity

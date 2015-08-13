@@ -37,6 +37,15 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'load' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
+                            'defaults' => array(
+                                'action' => 'load'
+                            )
+                        )
+                    ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
@@ -55,12 +64,12 @@ return array(
                             )
                         )
                     ),
-                    'remove' => array(
+                    'delete' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/remove',
+                            'route' => '/delete',
                             'defaults' => array(
-                                'action' => 'remove'
+                                'action' => 'delete'
                             )
                         )
                     )
@@ -106,9 +115,10 @@ return array(
             'Zend\Authentication\AuthenticationService' => __NAMESPACE__ . '\Factory\AuthFactory',
         ),
         'invokables' => array(
-            'userService' => __NAMESPACE__ . '\Service\User',
+            'userService' => __NAMESPACE__ . '\Service\UserService',
             'authStorage' => __NAMESPACE__ . '\Model\AuthStorage',
             'authService' => __NAMESPACE__ . '\Service\Auth',
+            'userFilter' => __NAMESPACE__ . '\Filter\UserFilter'
         ),
         'aliases' => array(
             'zendAuthService' => 'Zend\Authentication\AuthenticationService'
@@ -133,6 +143,9 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+        'template_map' => array(
+            'user' => __DIR__ . '/../view/partial/user.phtml',
         ),
         'strategies' => array(
             'ViewJsonStrategy'

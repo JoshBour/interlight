@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class AboutCategory
  * @package Application\Entity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Application\Repository\AboutRepository")
  * @ORM\Table(name="about_categories")
  */
 class AboutCategory {

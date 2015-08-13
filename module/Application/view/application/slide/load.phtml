@@ -1,0 +1,7 @@
+<div class="totalProductsNumber invisible"><?php echo $this->paginator->getTotalItemCount(); ?></div>
+<?php
+foreach ($this->paginator as $slide)
+    echo $this->partial('slide', array(
+        "slide" => $slide,
+    ));
+?>

@@ -1,0 +1,8 @@
+<div class="totalProductsNumber invisible"><?php echo $this->paginator->getTotalItemCount(); ?></div>
+<?php
+foreach ($this->paginator as $category)
+    echo $this->partial('category', array(
+        "category" => $category,
+        "categoriesSelect" => $categoriesSelect
+    ));
+?>

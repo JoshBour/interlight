@@ -1,0 +1,32 @@
+<?php
+/**
+ * @var \Product\Entity\Category $category
+ */
+$categoryId = $category->getCategoryId();
+$thumbnail = $category->getThumbnail();
+$parentCategory = $category->getParentCategory();
+?>
+<div class="tableColumn">
+    <div data-attribute="categoryId" data-constraints='[{"type":"primary"}]'>
+        <span class="tableCellText"><?php echo $category->getCategoryId(); ?></span>
+    </div>
+    <div data-attribute="name">
+        <span class="tableCellText"><?php echo $category->getName(); ?></span>
+    </div>
+    <div data-attribute="description" data-type="textarea">
+        <span class="tableCellText"><?php echo $category->getDescription(); ?></span>
+    </div>
+    <div  data-attribute="parentCategory" data-constraints='[{"type":"foreign","target":"Product\Entity\Category"}]' data-type="select">
+        <span class="tableCellMeta"><?php echo $this->select($this->categoriesSelect, $categoryId,null,true); ?></span>
+        <span class="tableCellText"><?php echo $parentCategory ? $parentCategory->getName() : ' - '; ?></span>
+    </div>
+    <div  data-attribute="thumbnail" data-type="image">
+        <span class="tableCellMeta">{"location":"images/categories","current" : "<?php echo $thumbnail; ?>", "name": "category"}</span>
+                    <span class="tableCellText">
+                        <?php echo $thumbnail ? '<img src="' . $this->basePath('images/categories/' . $thumbnail) . '" alt="' . $this->translate("category image") . '" />' : '-'; ?>
+                    </span>
+    </div>
+    <div data-attribute="position">
+        <span class="tableCellText"><?php echo $category->getPosition(); ?></span>
+    </div>
+</div>

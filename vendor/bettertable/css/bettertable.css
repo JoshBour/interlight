@@ -1,0 +1,870 @@
+
+/*html {*/
+    /*min-height: 100%;*/
+/*}*/
+
+/*body {*/
+    /*min-height: 100%;*/
+    /*font:normal 75% "Source Sans Pro",sans-serif;*/
+/*}*/
+
+.tableWrapper {
+    height: 100%;
+    opacity:0;
+    min-height:500px;
+    position: relative;
+    width: 100%;
+    overflow:hidden;
+    white-space: nowrap;
+    margin-top:10px;
+    font-family:sans-serif;
+}
+
+.tableHeader {
+    width: 10%;
+    height: 100%;
+    min-width: 140px;
+    max-width:196px;
+    text-shadow: 1px 1px 0 #fff;
+}
+
+.tableMatchedResult {
+    border: 1px solid #0084B4 !important;
+}
+
+.tableBody {
+    width: 93%;
+    position: relative;
+    overflow-x: auto;
+    margin-left: -2px;
+    overflow-y:hidden;
+}
+
+.tableBody, .tableHeader {
+    display: inline-block;
+    vertical-align: top;
+    height:100%;
+}
+
+.tableColumn {
+    display: inline-block;
+    height:100%;
+    vertical-align: top;
+}
+
+.tableBody .tableColumn:hover .tableCell, div.tableBody div.tableCell.hovered {
+    background: #eee;
+}
+
+/*.tableBody .tableCell:hover{*/
+/*background:red;*/
+/*}*/
+
+.tableBody .tableColumn {
+    width: 11%;
+    max-width:196px;
+    text-align: center;
+    min-width: 140px;
+}
+
+.tableHeader .tableColumn {
+    text-align: center;
+    width: 100%;
+    padding: 0;
+}
+
+.tableHeader .tableColumn .tableCell:last-of-type{
+    border-bottom:none;
+}
+
+.tableColumn .tableCell {
+    display: block;
+    padding: 1%;
+    vertical-align: middle;
+    line-height: 3em;
+    cursor: pointer;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #d1d1d1;
+    border-right: 1px solid #d1d1d1;
+    background: #fafafa;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+    background: -moz-linear-gradient(top, #fbfbfb, #fafafa);
+}
+
+.tableColumn .tableCell .tableCellText{
+    display: block;
+    /*white-space: nowrap;*/
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tableColumn .tableCell .tableCellText img{
+    height: 70px;
+    max-width: 110px;
+}
+
+.tableColumn .tableCell .tableCellMeta{
+    display:none;
+}
+
+.tableHeader .tableCell {
+    color:white;
+    text-shadow:1px 1px 1px black;
+    overflow: auto;
+    border-right: 1px solid #bbb;
+    text-align: left;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #333;
+    background: #555;
+}
+
+.tableHeader .tableCell span{
+    float:left;
+}
+
+
+.tableOptions, .tableFooter {
+    overflow: auto;
+    background: #dadada;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    /*position: fixed;*/
+    z-index: 9999;
+    width: 100%;
+}
+
+.tableOptions input {
+    padding: 10px;
+    border: none;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    width: 129px;
+    float:right;
+}
+
+.tableOptions .addLink{
+    float: right;
+    padding: 8px 7px 7px 7px;
+    background: rgb(245, 245, 245);
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+.tableOptions .addLink span{
+    color: #555;
+    font-weight:bold;
+    vertical-align: middle;
+}
+
+.tableOptions .tableName {
+    display: inline-block;
+    margin: 10px 0;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #bbb;
+}
+
+.tableOptions .tableActions {
+    float: right;
+}
+
+.tableOptions .tableActions a {
+    float: right;
+    cursor: pointer;
+    padding: 10px 10px 10px 30px;
+    border-left: 1px solid #c0c0c0;
+    /* border-right: 1px solid lightblue; */
+    /* border-right: 1px solid #bbb; */
+}
+
+.tableOptions .tableLengthWrapper {
+    float: left;
+    margin-left: 4px;
+}
+
+.tableOptions .tableLength {
+    padding: 9px;
+    border: none;
+    min-width: 70px;
+    width: 30px !important;
+    border-radius: 0;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-bottom: none;
+}
+
+.tableLength .selectBox-label{
+    display:block !important;
+    padding:0 !important;
+}
+
+.tableBody .tableCell img {
+    display: block;
+    /*width: 100px;*/
+    /*height: 70px;*/
+    margin: 5px auto;
+}
+
+.tableCell.delete img {
+    display: block;
+    vertical-align: middle;
+    margin: 10px auto;
+}
+
+.tableOptions a:hover {
+    text-decoration: underline;
+}
+
+.tableOptions .tableAdd {
+    background: transparent url(../images/add-icon.png) 17% center no-repeat;
+}
+
+.tableOptions .tableAdd:hover {
+    background-image: url(../images/add-icon-hover.png);
+}
+
+.tableOptions .tableSave {
+    background: transparent url(../images/save-icon.png) 17% center no-repeat;
+}
+
+.tableOptions .tableSave:hover {
+    background-image: url(../images/save-icon-hover.png);
+}
+
+span.tableCell {
+    white-space: pre-wrap;
+}
+
+.tableWrapper:after {
+    clear: both;
+}
+
+.tableHeader .sortOptions {
+    float: right;
+    vertical-align: middle;
+}
+
+.tableFooter {
+    text-align: center;
+    padding-top:2px;
+    border-bottom:1px solid #ccc;
+}
+
+/*.tablePagination {*/
+    /*margin-right: 145px;*/
+/*}*/
+
+.tableOptions .tablePagination a, .tableOptions .tablePagination span, .tableOptions .tablePagination, .tableOptions .tablePagination li {
+    display: inline-block;
+}
+
+.tablePagination a{
+    color: #333;
+}
+
+.tablePagination span {
+    color: #999;
+    text-shadow: 1px 1px 1px #eee;
+    cursor: default;
+}
+
+.tablePagination .tablePageActive:hover, .tablePagination a {
+    text-decoration: none;
+}
+
+.tablePages li.tablePageActive a {
+    text-decoration: underline;
+}
+
+.tablePagination a {
+    cursor: pointer;
+}
+
+.tablePagination a, .tablePagination span {
+    padding: 10px;
+}
+
+.tablePagination a:hover {
+    text-decoration: underline;
+}
+
+.tablePagination {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.sortOptions a {
+    width: 16px;
+    height: 16px;
+    display: block;
+    cursor: pointer;
+}
+
+.sortAsc {
+    background: transparent url('../images/arrow-up.png') no-repeat;
+}
+
+.sortAsc:hover, .sortOptions .sortAsc.sortActive {
+    background-image: url('../images/arrow-up-hover.png');
+}
+
+.sortDesc {
+    background: transparent url('../images/arrow-down.png') no-repeat;
+}
+
+.sortDesc:hover, .sortOptions .sortDesc.sortActive {
+    background-image: url('../images/arrow-down-hover.png');
+}
+
+.sortOptions .sortDesc {
+    margin-top: 4px;
+}
+
+.invisible {
+    display: none !important;
+}
+
+/*
+################################## Table Editor ##################################
+*/
+
+.tableCellActive, .tableCellActive:hover{
+    border: 1px solid #aaa !important;
+    background: yellow !important;
+}
+
+
+.tableEditorWrapper {
+    z-index: 200;
+    position: absolute;
+    top:0;
+    /*min-width: 350px;*/
+}
+
+.tableEditorWrapper.expanded{
+    max-width:450px;
+}
+
+.tableEditorWrapper.expandedTextEditor .tableEditor{
+    width:555px;
+}
+
+.tableEditorWrapper.expandedTextEditor .tableInputWrapper{
+    max-height:420px;
+    overflow-y:auto;
+}
+
+.tableEditorWrapper.expanded .tableEditor{
+    min-width:350px;
+}
+
+.tableEditor {
+    position: relative;
+    /*min-height: 230px;*/
+    display:inline-block;
+    text-align: center;
+    min-width: 350px;
+    z-index: 100;
+    background: #eee;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    height:100%;
+}
+
+.arrowLeft {
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    vertical-align: top;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #999;
+}
+
+.arrowRight{
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    vertical-align: top;
+    border-left: 15px solid #999;
+}
+
+.tableEditorWrapper.tableEditorInverted .tableEditor {
+    box-shadow: none;
+}
+
+.tableEditor .tableEditorActions {
+    width: 100%;
+    border-top: 1px solid #ccc;
+    background-color: #dfdfdf;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 0;
+}
+
+.tableEditor textarea, .tableEditor select {
+    display: block;
+    margin: 0 auto;
+    width: 95%;
+    min-height: 200px;
+    max-height:300px;
+    resize: vertical;
+}
+
+.tableEditor .tableEditorHeader {
+    display: block;
+    width: 90%;
+    padding: 5px 0;
+    margin: 5px auto 0 auto;
+    text-align: center;
+    border-bottom: 1px solid #aaa;
+    /*background: #ddd;*/
+}
+
+.tableEditor .tableEditorHeader h2 {
+    display: inline-block;
+    margin: 0;
+    font-size: 1.4em;
+    width: 100%;
+    color: #444;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #aaa;
+    text-shadow: 1px 1px 1px #eee;
+}
+
+.tableEditor .tableEditorTooltip {
+    /*width: 90%;*/
+    /*padding: 7px;*/
+    margin: 0 auto;
+    padding-top: 10px;
+    line-height: 1.5em;
+    white-space: normal;
+    border-top: 1px solid #eee;
+}
+
+.tableEditor .shortened .tableEditorTooltip{
+    position: absolute;
+    z-index: 10000;
+    width: 90%;
+    left: 50%;
+    margin-left: -45%;
+    margin-top: 5px;
+    padding: 7px 0;
+    font-size: 1.1em;
+    border: 1px solid #999;
+    background: #ddd;
+}
+
+.tableEditor .tableEditorTooltip p{
+    margin: 0 0.4em 1em 0.4em;
+    padding: 0;
+}
+
+.tableEditorHeader img{
+    cursor:pointer;
+}
+
+.tableEditor .tableEditorHeader.shortened img, .tableEditor .tableEditorHeader.shortened h2{
+    margin-left: 7px;
+    vertical-align: middle;
+    width: auto;
+    border-bottom: none;
+
+}
+
+.tableEditor .tableInputWrapper{
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.tableEditor .tableInputWrapper .thumbnail {
+    max-width: 285px;
+    height: auto;
+    /*width: auto;*/
+    max-height: 230px;
+    display: block;
+    /*border: 3px solid #ccc;*/
+    margin: 10px auto;
+}
+
+/*.tableEditor img.loading{*/
+    /*display: block;*/
+    /*margin: 0 auto;*/
+/*}*/
+
+.tableEditor .tableMeta{
+    display:none;
+    border-top: 1px solid rgb(146, 210, 232);
+    border-bottom: 1px solid rgb(146, 210, 232);
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    /*padding: 9px 0;*/
+    padding: 5px 0;
+    background-color: rgb(202, 225, 233);
+    position: absolute;
+    bottom: 61px;
+    margin: 5px auto;
+}
+
+.tableEditor .tableMeta img, .tableEditor .tableMeta .tableEditorMessage{
+    display:inline-block;
+}
+
+.tableEditor .tableMeta .tableEditorMessage{
+    vertical-align: middle;
+    margin-left:5px;
+}
+
+/*.tableEditField{*/
+    /*border-top: 1px solid #eee;*/
+    /*border-bottom: 1px solid #aaa;*/
+    /*padding: 15px 0;*/
+    /*margin: 0 auto;*/
+    /*width: 90%;*/
+/*}*/
+
+.attributeSelect.tableEditField{
+    max-width: 635px;
+}
+
+.fileManagerWrapper{
+    max-height: 300px;
+    overflow: auto;
+    display: block;
+}
+
+input.tableEditField {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    padding: 7px;
+}
+
+.tableEditor select {
+    padding: 10px;
+    min-height: initial;
+}
+
+.tableEditor .xdsoft_datetimepicker {
+    margin: 10px auto;
+}
+
+/*.tableEditorActions .tableButton{*/
+/*display: inline-block;*/
+/*color: #666;*/
+/*background-color: #eee;*/
+/* text-transform: uppercase; */
+/*letter-spacing: 2px;*/
+/* font-size: 12px; */
+/* margin: 5px 10px; */
+/* float: left; */
+/*width: 20%;*/
+/*margin: 13px 10px;*/
+/*padding: 8px 25px;*/
+/*border-radius: 2px;*/
+/*-moz-border-radius: 2px;*/
+/*-webkit-border-radius: 2px;*/
+/*border: 1px solid rgba(0,0,0,0.3);*/
+/*border-bottom-width: 3px;*/
+/*}*/
+
+.tableEditorActions .tableButton, .tableWrapper .tableButton {
+    display: inline-block;
+    white-space: nowrap;
+    background-color: #ddd;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc));
+    background-image: -webkit-linear-gradient(top, #eee, #ccc);
+    background-image: -moz-linear-gradient(top, #eee, #ccc);
+    background-image: -ms-linear-gradient(top, #eee, #ccc);
+    background-image: -o-linear-gradient(top, #eee, #ccc);
+    background-image: linear-gradient(top, #eee, #ccc);
+    border: 1px solid #777;
+    font: bold 1em/2em Arial, Helvetica;
+    text-decoration: none;
+    color: #333;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
+    -moz-border-radius: .2em;
+    -webkit-border-radius: .2em;
+    border-radius: .2em;
+    -moz-box-shadow: 0 0 1px 1px rgba(255, 255, 255, .8) inset, 0 1px 0 rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, .8) inset, 0 1px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 0 1px 1px rgba(255, 255, 255, .8) inset, 0 1px 0 rgba(0, 0, 0, .3);
+
+}
+
+.tableButton {
+    padding: .2em 1em;
+}
+
+.tableEditorActions .tableButton {
+    width: 30%;
+    /* padding: .4em 2em; */
+    margin: 1em 2em;
+}
+
+.tableEditorActions .tableButton.disabled{
+    background: #bbb !important;
+}
+
+.tableEditorActions .tableButton:hover, .button {
+    cursor: pointer;
+    background-color: #eee;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#ddd));
+    background-image: -webkit-linear-gradient(top, #fafafa, #ddd);
+    background-image: -moz-linear-gradient(top, #fafafa, #ddd);
+    background-image: -ms-linear-gradient(top, #fafafa, #ddd);
+    background-image: -o-linear-gradient(top, #fafafa, #ddd);
+    background-image: linear-gradient(top, #fafafa, #ddd);
+}
+
+.tableEditorActions .tableButton:active, .button:active {
+    -moz-box-shadow: 0 0 4px 2px rgba(0, 0, 0, .3) inset;
+    -webkit-box-shadow: 0 0 4px 2px rgba(0, 0, 0, .3) inset;
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, .3) inset;
+    position: relative;
+    top: 1px;
+}
+
+.tableEditor table.tableEditField {
+    width: 100%;
+    margin: 0 auto;
+    border-left: 1px solid #aaa;
+}
+
+.tableEditor table.tableEditField th {
+    background: rgb(238, 238, 238); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(238, 238, 238, 1)), color-stop(100%, rgba(204, 204, 204, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc', GradientType=0); /* IE6-9 */
+    border-top: 1px solid #aaa !important;
+
+}
+
+
+.tableEditor table.tableEditField th, .tableEditor table.tableEditField td {
+    width: 20%;
+    max-width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    padding: 10px;
+    background-color: #eaeaea;
+    border-bottom: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+}
+
+.tableEditor .fileManagerWrapper table td .button{
+    display:block;
+    padding:0;
+}
+
+.tableEditor .fileManagerWrapper table td input{
+    width: 50px;
+    text-align: center;
+}
+
+.tableEditor .fileAddButton{
+    position:relative;
+    overflow:hidden;
+}
+
+.tableEditor .fileAddButton{
+    position:relative;
+    margin-left: 25px;
+}
+
+.tableEditor .fileAddButton input{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+}
+
+.fileUploadWrapper{
+    padding: 7px;
+    background: #add8e6;
+    margin-top: 15px;
+    border: 1px solid #88BFD1;
+}
+
+.fileUploadWrapper .button img{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+
+.fileUploadWrapper .button{
+    margin-top:0;
+    padding: 4px 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+
+.fileUploadWrapper .button span{
+    padding-right: 1em;
+    text-overflow: ellipsis;
+    max-width: 55px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.tableEditor table.tableEditField img{
+    cursor:pointer;
+}
+
+.progressBar{
+    padding:10px 0;
+    margin-top:5px;
+    display:none;
+    text-indent:5px;
+    text-align:left;
+    /* padding: 10px; */
+    width: 0;
+    background-color: #ccc;
+}
+
+.progressBar.uploadFail{
+    background-color:#D97645;
+}
+
+.progressBar.uploadSuccess{
+    background-color:#7ED945;
+}
+
+#shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: .5;
+    z-index: 100
+}
+
+/*
+################################## Loading Box ##################################
+*/
+
+.loadingBox {
+    width: 300px;
+    height: 15px;
+    border: 1px solid #333;
+    border-radius: 3px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -150px;
+}
+
+.loadingBar {
+    height: 100%;
+    width: 0;
+    background-image: url(../images/module-loading.gif);
+}
+
+/*
+################################## Arrow Box ##################################
+*/
+
+.arrow_box {
+    position: relative;
+    background: #eee;
+    border: 2px solid #aaaaaa;
+}
+
+.arrow_box:after, .arrow_box:before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.arrow_box:after {
+    border-color: rgba(238, 238, 238, 0);
+    border-bottom-color: #eee;
+    border-width: 10px;
+    margin-left: -10px;
+}
+
+.arrow_box:before {
+    border-color: rgba(170, 170, 170, 0);
+    border-bottom-color: #aaaaaa;
+    border-width: 14px;
+    margin-left: -14px;
+}
+
+/***
+  Styles below are only required if you're using <iframe> fallback in
+  addition to HTML5 drag & drop (only working in Firefox/Chrome/Opera 15+).
+ ***/
+
+/* Essential FileDrop zone element configuration: */
+.fd-zone {
+    position: relative;
+    overflow: hidden;
+    /* The following are not required but create a pretty box: */
+    width: 15em;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Hides <input type="file"> while simulating "Browse" button: */
+.fd-file {
+    opacity: 0;
+    font-size: 118px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    filter: alpha(opacity=0);
+    font-family: sans-serif;
+}
+
+/* Provides visible feedback when user drags a file over the drop zone: */
+.fd-zone.over {
+    border-color: maroon;
+    background: #eee;
+}
+
+@media only screen and (max-width: 1280px) {
+    /*body{*/
+        /*font-size:65%;*/
+    /*}*/
+
+    /*.sortOptions img{*/
+        /*width:12px;*/
+        /*height:12px;*/
+    /*}*/
+
+}

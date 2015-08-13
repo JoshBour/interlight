@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var \User\Entity\User $user
+ */
+$email = $user->getEmail();
+?>
+<div class="tableColumn">
+    <div data-attribute="userId"><span class="tableCellText"><?php echo $user->getUserId(); ?></span></div>
+    <div data-attribute="username"><span class="tableCellText"><?php echo $user->getUsername(); ?></span></div>
+    <div data-attribute="password"><span class="tableCellText">-</span></div>
+    <div data-attribute="email"><span class="tableCellText"><?php echo $email ? $user->getEmail() : '-'; ?></span></div>
+</div>

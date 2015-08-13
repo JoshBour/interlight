@@ -10,14 +10,18 @@ namespace Product\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Product\Model\InvalidArgumentException;
+use ZendTest\XmlRpc\Server\Exception;
 
 /**
  * Class Category
  * @package Product\Entity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Product\Repository\CategoryRepository")
  * @ORM\Table(name="categories")
  */
-class Category {
+class Category
+{
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -66,17 +70,19 @@ class Category {
      */
     private $url;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->children = new ArrayCollection();
         $this->products = new ArrayCollection();
     }
 
-    public function encodeUrl(){
-        $words = array_slice(str_word_count($this->name,1),0,10);
-        foreach($words as $key => $word){
+    public function encodeUrl()
+    {
+        $words = array_slice(str_word_count($this->name, 1), 0, 10);
+        foreach ($words as $key => $word) {
             $words[$key] = strtolower($word);
         }
-        return join('-',$words);
+        return join('-', $words);
     }
 
     /**
@@ -128,7 +134,8 @@ class Category {
     }
 
     /**
-     * @param mixed $name
+     * @param $name
+     * @throws \Exception
      */
     public function setName($name)
     {

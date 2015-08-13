@@ -16,6 +16,7 @@ use Zend\Http\Request;
 class IndexController extends BaseController
 {
     const ROUTE_USER_LIST = "users";
+    const ROUTE_ADD_USER = "users/add";
     const CONTROLLER_NAME = 'User\Controller\Index';
     const LAYOUT_ADMIN = "layout/admin";
 
@@ -50,11 +51,34 @@ class IndexController extends BaseController
     {
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
-            $userRepository = $this->getUserRepository();
             return new ViewModel(array(
-                "users" => $userRepository->findAll(),
+                "paginator" => $this->getUserService()->load(),
                 "form" => $this->getUserForm()
             ));
+        }
+        return $this->notFoundAction();
+    }
+
+    public function loadAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $params = $request->getQuery();
+
+            $service = $this->getUserService();
+
+
+            $limit = $params->get("limit", 10);
+            $page = $params->get("page", 1);
+            $sort = $params->get("sort",null);
+            $search = $params->get("search",null);
+
+
+            $viewModel = new ViewModel(array(
+                "paginator" => $service->load($limit, $page, $sort, $search),
+            ));
+            $viewModel->setTerminal(true);
+            return $viewModel;
         }
         return $this->notFoundAction();
     }
@@ -68,13 +92,18 @@ class IndexController extends BaseController
      */
     public function saveAction()
     {
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
             $success = 1;
-            $message = $this->translate($this->vocabulary["MESSAGE_USERS_SAVED"]);
-            $entities = $this->params()->fromPost('entities');
-            if (!$this->getUserService()->save($entities)) {
+            $message = $this->translate($this->vocabulary["MESSAGE_USER_SAVED"]);
+            $userService = $this->getUserService();
+            $data = $request->getPost();
+            if (!$userService->save($data)) {
                 $success = 0;
-                $message = $this->translate($this->vocabulary["ERROR_USERS_NOT_SAVED"]);
+                $message = $userService->getMessage();
             }
             return new JsonModel(array(
                 "success" => $success,
@@ -98,20 +127,23 @@ class IndexController extends BaseController
          * @var \Zend\Http\Request $request
          */
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
-            $service = $this->getUserService();
+        if ($this->identity()) {
+            $this->layout()->setTemplate(self::LAYOUT_ADMIN);
+            $form = $this->getUserForm();
             if ($request->isPost()) {
+                $service = $this->getUserService();
                 $data = $request->getPost();
-                $form = $this->getUserForm();
                 if ($service->create($data, $form)) {
-                    $this->flashMessenger()->addMessage($this->translate($this->vocabulary["MESSAGE_USER_CREATED"]));
-                    return new JsonModel(array('redirect' => true));
-                } else {
-                    $viewModel = new ViewModel(array("form" => $form));
-                    $viewModel->setTerminal(true);
-                    return $viewModel;
+                    $this->flashMessenger()->addMessage($service->getMessage());
+                    return $this->redirect()->toRoute(self::ROUTE_ADD_USER);
                 }
             }
+            return new ViewModel(array(
+                "form" => $form,
+                "activeRoute" => "users",
+                "pageTitle" => "Interlight - Add User"
+            ));
+
         }
         return $this->notFoundAction();
     }
@@ -123,10 +155,10 @@ class IndexController extends BaseController
      *
      * @return array|JsonModel
      */
-    public function removeAction()
+    public function deleteAction()
     {
         if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $id = $this->params()->fromPost("id");
+            $id = $this->params()->fromPost("entityId");
             $success = 0;
             $message = $this->translate($this->vocabulary["MESSAGE_USER_REMOVED"]);
             if ($this->getUserService()->remove($id)) {
@@ -169,12 +201,12 @@ class IndexController extends BaseController
     /**
      * Gets the user service
      *
-     * @return \User\Service\User
+     * @return \User\Service\UserService
      */
     public function getUserService()
     {
         if (null == $this->userService)
-            $this->userService = $this->getServiceLocator()->get('user_service');
+            $this->userService = $this->getServiceLocator()->get('userService');
         return $this->userService;
     }
 

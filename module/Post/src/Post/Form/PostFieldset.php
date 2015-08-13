@@ -26,20 +26,37 @@ class PostFieldset extends BaseFieldset implements InputFilterProviderInterface
     {
         parent::__construct("post");
 
+        $vocabulary = $this->getVocabulary();
+
         $this->add(array(
             'name' => 'thumbnail',
             'type' => 'file',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_POST_THUMBNAIL"])
+            ),
         ));
 
         $this->add(array(
             'name' => 'title',
             'type' => 'text',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_POST_TITLE"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_POST_TITLE"])
+            ),
 
         ));
 
         $this->add(array(
             'name' => 'content',
             'type' => 'text',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_POST_CONTENT"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_POST_CONTENT"])
+            ),
         ));
     }
 
@@ -51,80 +68,14 @@ class PostFieldset extends BaseFieldset implements InputFilterProviderInterface
      */
     public function getInputFilterSpecification()
     {
-        $vocabulary = $this->getVocabulary();
-        return array(
-            'title' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_POST_TITLE_EMPTY"])
-                            )
-                        )
-                    ),
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 4,
-                            'max' => 50,
-                            'messages' => array(
-                                StringLength::TOO_LONG => $this->getTranslator()->translate($vocabulary["ERROR_POST_TITLE_INVALID_LENGTH"]),
-                                StringLength::TOO_SHORT => $this->getTranslator()->translate($vocabulary["ERROR_POST_TITLE_INVALID_LENGTH"])
-                            )
-                        )
-                    ),
-                    array(
-                        'name' => 'DoctrineModule\Validator\NoObjectExists',
-                        'options' => array(
-                            'object_repository' => $this->getEntityManager()->getRepository('Post\Entity\Post'),
-                            'fields' => 'title',
-                            'messages' => array(
-                                'objectFound' => $this->getTranslator()->translate($vocabulary["ERROR_POST_EXISTS"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'content' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_POST_CONTENT_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'thumbnail' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_THUMBNAIL_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
+        $filters = $this->getServiceLocator()->get('postFilter')->getMergedFilters();
+        $filters["thumbnail"]["validators"][] = array(
+            'name' => 'Application\Validator\Image',
+            'options' => array(
+                'maxSize' => '40960',
             )
         );
+        return $filters;
     }
 
 

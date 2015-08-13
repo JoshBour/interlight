@@ -1,0 +1,21 @@
+<div class="tableOptions">
+    <div class="tableLengthWrapper">
+        Posts Showing:
+        <select class="tableLength">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="30">30</option>
+            <option value="100">100</option>
+            <option value="-1">All</option>
+        </select>
+    </div>
+    <input type="text" class="tableSearch" placeholder="Search...">
+    <a href="http://interlight.test.com/admin/<?php echo $this->location; ?>/add" title="Add a new entity" class="addLink"><img
+            src="http://interlight.test.com/vendor/bettertable/images/add-link-icon.png"><span>Add</span></a>
+    <?php
+    echo $this->partial("admin_paginator", array(
+        "paginator" => $this->paginator
+    ));
+    ?>
+</div>

@@ -1,0 +1,10 @@
+<div class="totalProductsNumber invisible"><?php echo $this->paginator->getTotalItemCount(); ?></div>
+<?php
+foreach ($this->paginator as $product)
+    echo $this->partial('admin_product', array(
+        "product" => $product,
+        "attributes" => $attributes,
+        "categories" => $categories,
+        "productsAssoc" => $productsAssoc
+    ))
+?>

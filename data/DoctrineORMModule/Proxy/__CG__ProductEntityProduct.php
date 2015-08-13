@@ -209,6 +209,17 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
+    public function clearAttributes()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'clearAttributes', array());
+
+        return parent::clearAttributes();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function removeAttributes(\Product\Entity\ProductAttribute $attribute)
     {
 
@@ -356,23 +367,23 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function addProductVariations(\Product\Entity\ProductVariation $productVariation)
+    public function addProductVariations(\Product\Entity\Product $product)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addProductVariations', array($productVariation));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addProductVariations', array($product));
 
-        return parent::addProductVariations($productVariation);
+        return parent::addProductVariations($product);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeProductVariations(\Product\Entity\ProductVariation $productVariation)
+    public function removeProductVariations(\Product\Entity\Product $product)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeProductVariations', array($productVariation));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeProductVariations', array($product));
 
-        return parent::removeProductVariations($productVariation);
+        return parent::removeProductVariations($product);
     }
 
     /**
@@ -411,6 +422,17 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
+    public function getProductVariationsAssoc()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProductVariationsAssoc', array());
+
+        return parent::getProductVariationsAssoc();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getPrice()
     {
 
@@ -422,23 +444,23 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function addRelatedProducts(\Product\Entity\RelatedProduct $relatedProduct)
+    public function addRelatedProducts(\Product\Entity\Product $product)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addRelatedProducts', array($relatedProduct));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addRelatedProducts', array($product));
 
-        return parent::addRelatedProducts($relatedProduct);
+        return parent::addRelatedProducts($product);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeRelatedProducts(\Product\Entity\RelatedProduct $relatedProduct)
+    public function removeRelatedProducts(\Product\Entity\Product $product)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeRelatedProducts', array($relatedProduct));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeRelatedProducts', array($product));
 
-        return parent::removeRelatedProducts($relatedProduct);
+        return parent::removeRelatedProducts($product);
     }
 
     /**
@@ -488,6 +510,17 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
+    public function getRelatedProductsAssoc()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRelatedProductsAssoc', array());
+
+        return parent::getRelatedProductsAssoc();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setRelatedToProducts($relatedToProducts)
     {
 
@@ -510,7 +543,7 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function addRelatedToProducts(\Product\Entity\RelatedProduct $product)
+    public function addRelatedToProducts(\Product\Entity\Product $product)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addRelatedToProducts', array($product));
@@ -521,7 +554,7 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function removeRelatedToProducts(\Product\Entity\RelatedProduct $product)
+    public function removeRelatedToProducts(\Product\Entity\Product $product)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeRelatedToProducts', array($product));
@@ -598,23 +631,23 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function addVariationToProducts(\Product\Entity\ProductVariation $productVariation)
+    public function addVariationToProducts(\Product\Entity\Product $product)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addVariationToProducts', array($productVariation));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addVariationToProducts', array($product));
 
-        return parent::addVariationToProducts($productVariation);
+        return parent::addVariationToProducts($product);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeVariationToProducts(\Product\Entity\ProductVariation $productVariation)
+    public function removeVariationToProducts(\Product\Entity\Product $product)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeVariationToProducts', array($productVariation));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeVariationToProducts', array($product));
 
-        return parent::removeVariationToProducts($productVariation);
+        return parent::removeVariationToProducts($product);
     }
 
 }

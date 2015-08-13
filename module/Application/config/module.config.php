@@ -39,6 +39,15 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'load' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
+                            'defaults' => array(
+                                'action' => 'load'
+                            )
+                        )
+                    ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
@@ -57,10 +66,10 @@ return array(
                             )
                         )
                     ),
-                    'remove' => array(
+                    'delete' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/remove',
+                            'route' => '/delete',
                             'defaults' => array(
                                 'action' => 'remove'
                             )
@@ -68,46 +77,6 @@ return array(
                     )
                 )
             ),
-//            'partners' => array(
-//                'type' => 'Zend\Mvc\Router\Http\Literal',
-//                'options' => array(
-//                    'route' => '/admin/partners',
-//                    'defaults' => array(
-//                        'controller' => __NAMESPACE__ . '\Controller\Partner',
-//                        'action' => 'list',
-//                    ),
-//                ),
-//                'may_terminate' => true,
-//                'child_routes' => array(
-//                    'save' => array(
-//                        'type' => 'Zend\Mvc\Router\Http\Literal',
-//                        'options' => array(
-//                            'route' => '/save',
-//                            'defaults' => array(
-//                                'action' => 'save'
-//                            )
-//                        )
-//                    ),
-//                    'add' => array(
-//                        'type' => 'Zend\Mvc\Router\Http\Literal',
-//                        'options' => array(
-//                            'route' => '/add',
-//                            'defaults' => array(
-//                                'action' => 'add'
-//                            )
-//                        )
-//                    ),
-//                    'remove' => array(
-//                        'type' => 'Zend\Mvc\Router\Http\Literal',
-//                        'options' => array(
-//                            'route' => '/remove',
-//                            'defaults' => array(
-//                                'action' => 'remove'
-//                            )
-//                        )
-//                    )
-//                )
-//            ),
             'slides' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
@@ -119,6 +88,15 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'load' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/load[?page=:page&limit=:limit&search=:search&sort=:sort]',
+                            'defaults' => array(
+                                'action' => 'load'
+                            )
+                        )
+                    ),
                     'save' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
@@ -137,12 +115,12 @@ return array(
                             )
                         )
                     ),
-                    'remove' => array(
+                    'delete' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/remove',
+                            'route' => '/delete',
                             'defaults' => array(
-                                'action' => 'remove'
+                                'action' => 'delete'
                             )
                         )
                     )
@@ -203,7 +181,7 @@ return array(
             'upload-file' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route' => '/upload-file',
+                    'route' => '/admin/upload-file',
                     'defaults' => array(
                         'controller' => __NAMESPACE__ . '\Controller\Index',
                         'action' => 'upload-file'
@@ -253,10 +231,13 @@ return array(
         ),
         'invokables' => array(
             'partnerService' => __NAMESPACE__ . '\Service\Partner',
-            'aboutCategoryService' => __NAMESPACE__ . '\Service\AboutCategory',
-            'slideService' => __NAMESPACE__ . '\Service\Slide',
-            'contentService' => __NAMESPACE__ . '\Service\Content',
-            'fileUtilService' => __NAMESPACE__ . '\Service\FileUtils',
+            'aboutCategoryService' => __NAMESPACE__ . '\Service\AboutCategoryService',
+            'slideService' => __NAMESPACE__ . '\Service\SlideService',
+            'contentService' => __NAMESPACE__ . '\Service\ContentService',
+            'fileUtilService' => __NAMESPACE__ . '\Service\FileUtilService',
+            'slideFilter' => __NAMESPACE__ . '\Filter\SlideFilter',
+            'aboutCategoryFilter' => __NAMESPACE__ . '\Filter\AboutCategoryFilter',
+            'contentFilter' => __NAMESPACE__ . '\Filter\ContentFilter',
         ),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
@@ -288,6 +269,8 @@ return array(
         ),
         'invokables' => array(
             'mobile' => __NAMESPACE__ . '\View\Helper\Mobile',
+            'generateSelect' => __NAMESPACE__ . '\View\Helper\GenerateSelect',
+            'select' => __NAMESPACE__ . '\View\Helper\Select',
         )
     ),
     'controllers' => array(
@@ -317,7 +300,11 @@ return array(
             'header' => __DIR__ . '/../view/partial/header.phtml',
             'header_admin' => __DIR__ . '/../view/partial/header-admin.phtml',
             'footer' => __DIR__ . '/../view/partial/footer.phtml',
+            'admin_paginator' => __DIR__ . '/../view/partial/paginator.phtml',
+            'table_options' => __DIR__ . '/../view/partial/table_options.phtml',
             'footer_admin' => __DIR__ . '/../view/partial/footer-admin.phtml',
+            'slide' => __DIR__ . '/../view/partial/slide.phtml',
+            'about_category' => __DIR__ . '/../view/partial/about_category.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

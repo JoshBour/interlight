@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Slide
  * @package Application\Entity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Application\Repository\SlideRepository")
  * @ORM\Table(name="slides")
  */
 class Slide {
@@ -25,10 +25,9 @@ class Slide {
     private $slideId;
 
     /**
-     * @ORM\OneToOne(targetEntity="Post\Entity\Post")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="post_id")
+     * @ORM\Column(type="string", length=255)
      */
-    private $post;
+    private $url;
 
     /**
      * @ORM\Column(type="integer", length=3)
@@ -78,22 +77,6 @@ class Slide {
     }
 
     /**
-     * @param mixed $post
-     */
-    public function setPost($post)
-    {
-        $this->post = $post;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPost()
-    {
-        return $this->post;
-    }
-
-    /**
      * @param mixed $slideId
      */
     public function setSlideId($slideId)
@@ -123,6 +106,22 @@ class Slide {
     public function getThumbnail()
     {
         return $this->thumbnail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 
 

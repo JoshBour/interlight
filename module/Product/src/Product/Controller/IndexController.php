@@ -12,6 +12,7 @@ namespace Product\Controller;
 use Application\Controller\BaseController;
 use Application\Model\FileUtils;
 use Doctrine\ORM\EntityRepository;
+use Product\Entity\Product;
 use Zend\Http\Request;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -25,6 +26,7 @@ use Zend\View\Model\ViewModel;
 class IndexController extends BaseController
 {
     const LAYOUT_ADMIN = "layout/admin";
+    const ROUTE_ADD_PRODUCT = "products/add";
 
     private $categoryRepository;
 
@@ -40,6 +42,7 @@ class IndexController extends BaseController
         return new ViewModel(array(
             "categories" => $categories,
             "useBlackLayout" => true,
+            "bodyClass" => "blackLayout",
             "pageTitle" => "Interlight - Products"
         ));
     }
@@ -69,7 +72,36 @@ class IndexController extends BaseController
             $viewModel = new ViewModel();
             $viewModel->setTerminal(true);
             $value = $this->params()->fromRoute("value");
-            $viewModel->setVariable("products", $this->getProductRepository()->search($value));
+            $products = $this->getProductRepository()->searchAll($value);
+            $viewModel->setVariable("products",$products );
+//            var_dump($products);
+            return $viewModel;
+        }
+        return $this->notFoundAction();
+    }
+
+    public function loadAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $params = $request->getQuery();
+
+            $service = $this->getProductService();
+
+
+            $limit = $params->get("limit", 10);
+            $page = $params->get("page", 1);
+            $sort = $params->get("sort",null);
+            $search = $params->get("search",null);
+
+
+            $viewModel = new ViewModel(array(
+                "paginator" => $service->load($limit, $page, $sort, $search),
+                "categories" => $this->getCategoryRepository()->findNameAndId(),
+                "attributes" => $this->getRepository("product","attribute")->findAll(),
+                "productsAssoc" => $this->getProductRepository()->findAssoc()
+            ));
+            $viewModel->setTerminal(true);
             return $viewModel;
         }
         return $this->notFoundAction();
@@ -79,11 +111,19 @@ class IndexController extends BaseController
     {
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
-            $this->getService('fileUtil')->clearTempFiles();
-            $productRepository = $this->getProductRepository();
+            $params = $this->params();
+//            $productRepository = $this->getProductRepository();
+
+            $limit = $params->fromRoute("limit", 10);
+            $page = $params->fromQuery("page");
+            $sort = $params->fromRoute("sort");
+            $search = $params->fromRoute("search");
+
             return new ViewModel(array(
-                "products" => $productRepository->findAll(),
-                "form" => $this->getProductForm()
+                "attributes" => $this->getRepository('product','attribute')->findAll(),
+                "categories" => $this->getCategoryRepository()->findNameAndId(),
+                "paginator" => $this->getProductService()->load(),
+                "productsAssoc" => $this->getProductRepository()->findAssoc()
             ));
         }
         return $this->notFoundAction();
@@ -92,60 +132,65 @@ class IndexController extends BaseController
     public function addAction()
     {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
-            $service = $this->getProductService();
+        if ($this->identity()) {
+            $this->layout()->setTemplate(self::LAYOUT_ADMIN);
+            $form = $this->getProductForm();
+
             if ($request->isPost()) {
+                $service = $this->getProductService();
                 $data = array_merge_recursive(
                     $request->getPost()->toArray(),
                     $request->getFiles()->toArray()
                 );
-                $form = $this->getProductForm();
+
                 if ($service->create($data, $form)) {
-                    $this->flashMessenger()->addMessage($this->translate($this->vocabulary["MESSAGE_PRODUCT_CREATED"]));
-                    return new JsonModel(array('redirect' => true));
-                } else {
-                    $viewModel = new ViewModel(array("form" => $form));
-                    $viewModel->setTerminal(true);
-                    return $viewModel;
+                    $this->flashMessenger()->addMessage($service->getMessage());
+
+                    return $this->redirect()->toRoute(self::ROUTE_ADD_PRODUCT);
                 }
             }
+            return new ViewModel(array(
+                "form" => $form,
+                "encodedAttributes" => isset($data['product']['attributes']) ? $data['product']['attributes'] : array(),
+                "activeRoute" => "products",
+                "pageTitle" => "Interlight - Add Product"
+            ));
         }
         return $this->notFoundAction();
     }
 
     public function saveAction()
     {
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $success = 1;
-            $message = $this->translate($this->vocabulary["MESSAGE_PRODUCTS_SAVED"]);
-            $entities = $this->params()->fromPost('entities');
-            if (!$this->getProductService()->save($entities)) {
-                $success = 0;
-                $message = $this->translate($this->vocabulary["ERROR_PRODUCTS_NOT_SAVED"]);
-            }
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $productService = $this->getProductService();
+            $data = $request->getPost();
+            $success = $productService->save($data) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $productService->getMessage()
             ));
         } else {
             return $this->notFoundAction();
         }
     }
 
-    public function removeAction()
+    public function deleteAction()
     {
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $id = $this->params()->fromPost("id");
-            $success = 0;
-            $message = $this->translate($this->vocabulary["MESSAGE_PRODUCT_REMOVED"]);
-            if ($this->getProductService()->remove($id)) {
-                $success = 1;
-            } else {
-                $message = $this->translate($this->vocabulary["ERROR_PRODUCT_NOT_REMOVED"]);
-            }
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $id = $this->params()->fromPost("entityId");
+            $productService = $this->getProductService();
+            $success = $productService->remove($id) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $productService->getMessage()
             ));
         }
         return $this->notFoundAction();
@@ -154,7 +199,7 @@ class IndexController extends BaseController
     /**
      * Get the category repository
      *
-     * @return EntityRepository
+     * @return \Product\Repository\CategoryRepository
      */
     public function getCategoryRepository()
     {
@@ -190,7 +235,7 @@ class IndexController extends BaseController
     /**
      * Get the product service
      *
-     * @return \Product\Service\Product
+     * @return \Product\Service\ProductService
      */
     public function getProductService()
     {

@@ -37,7 +37,7 @@ class ProductFormFactory implements FactoryInterface
          */
         $fieldset = $formManager->get('Product\Form\ProductFieldset');
         $form = new ProductForm();
-        $hydrator = new DoctrineHydrator($entityManager, '\Post\Entity\Post');
+        $hydrator = new DoctrineHydrator($entityManager, '\Product\Entity\Product');
 
         $fieldset->setUseAsBaseFieldset(true)
             ->setHydrator($hydrator)

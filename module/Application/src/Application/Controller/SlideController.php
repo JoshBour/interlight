@@ -16,6 +16,7 @@ use Zend\View\Model\ViewModel;
 class SlideController extends BaseController
 {
     const LAYOUT_ADMIN = "layout/admin";
+    const ROUTE_ADD_SLIDE = "slides/add";
 
     /**
      * The slide form
@@ -27,76 +28,100 @@ class SlideController extends BaseController
     /**
      * The slide service
      *
-     * @var \Application\Service\Slide
+     * @var \Application\Service\SlideService
      */
     private $slideService;
 
-    public function listAction(){
+    public function loadAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $params = $request->getQuery();
+
+            $service = $this->getSlideService();
+
+
+            $limit = $params->get("limit", 10);
+            $page = $params->get("page", 1);
+            $sort = $params->get("sort",null);
+            $search = $params->get("search",null);
+
+
+            $viewModel = new ViewModel(array(
+                "paginator" => $service->load($limit, $page, $sort, $search),
+            ));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+        return $this->notFoundAction();
+    }
+
+    public function listAction()
+    {
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
-            $slideRepository = $this->getRepository('application','slide');
             return new ViewModel(array(
-                "slides" => $slideRepository->findAll(),
-                "form" => $this->getSlideForm()
+                "paginator" => $this->getSlideService()->load(),
             ));
         }
         return $this->notFoundAction();
     }
 
-    public function addAction(){
+    public function addAction()
+    {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
-            $service = $this->getSlideService();
+        if ($this->identity()) {
+            $this->layout()->setTemplate(self::LAYOUT_ADMIN);
+            $form = $this->getSlideForm();
             if ($request->isPost()) {
+                $service = $this->getSlideService();
                 $data = array_merge_recursive(
                     $request->getPost()->toArray(),
                     $request->getFiles()->toArray()
                 );
-                $form = $this->getSlideForm();
                 if ($service->create($data, $form)) {
-                    $this->flashMessenger()->addMessage($this->translate($this->vocabulary["MESSAGE_SLIDE_CREATED"]));
-                    return new JsonModel(array('redirect' => true));
-                } else {
-                    $viewModel = new ViewModel(array("form" => $form));
-                    $viewModel->setTerminal(true);
-                    return $viewModel;
+                    $this->flashMessenger()->addMessage($service->getMessage());
+
+                    return $this->redirect()->toRoute(self::ROUTE_ADD_SLIDE);
                 }
             }
+            return new ViewModel(array(
+                "form" => $form,
+                "activeRoute" => "slides",
+                "pageTitle" => "Interlight - Add Slide"
+            ));
         }
         return $this->notFoundAction();
     }
 
-    public function saveAction(){
-        if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $success = 1;
-            $message = $this->translate($this->vocabulary["MESSAGE_SLIDES_SAVED"]);
-            $entities = $this->params()->fromPost('entities');
-            if (!$this->getSlideService()->save($entities)) {
-                $success = 0;
-                $message = $this->translate($this->vocabulary["ERROR_SLIDES_NOT_SAVED"]);
-            }
+    public function saveAction()
+    {
+        /**
+         * @var \Zend\Http\Request $request
+         */
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest() && $this->identity()) {
+            $slideService = $this->getSlideService();
+            $data = $request->getPost();
+            $success = $slideService->save($data) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $slideService->getMessage()
             ));
         } else {
             return $this->notFoundAction();
         }
     }
 
-    public function removeAction(){
+    public function deleteAction()
+    {
         if ($this->getRequest()->isXmlHttpRequest() && $this->identity()) {
-            $id = $this->params()->fromPost("id");
-            $success = 0;
-            $message = $this->translate($this->vocabulary["MESSAGE_SLIDE_REMOVED"]);
-            if ($this->getSlideService()->remove($id)) {
-                $success = 1;
-            } else {
-                $message = $this->translate($this->vocabulary["ERROR_SLIDE_NOT_REMOVED"]);
-            }
+            $id = $this->params()->fromPost("entityId");
+            $slideService = $this->getSlideService();
+            $success = $this->getSlideService()->remove($id) ? 1 : 0;
             return new JsonModel(array(
                 "success" => $success,
-                "message" => $message
+                "message" => $slideService->getMessage()
             ));
         }
         return $this->notFoundAction();
@@ -107,8 +132,9 @@ class SlideController extends BaseController
      *
      * @return \Zend\Form\Form
      */
-    public function getSlideForm(){
-        if(null === $this->slideForm)
+    public function getSlideForm()
+    {
+        if (null === $this->slideForm)
             $this->slideForm = $this->getForm('slide');
         return $this->slideForm;
     }
@@ -116,10 +142,11 @@ class SlideController extends BaseController
     /**
      * Get the slide service
      *
-     * @return \Application\Service\Slide
+     * @return \Application\Service\SlideService
      */
-    public function getSlideService(){
-        if(null === $this->slideService)
+    public function getSlideService()
+    {
+        if (null === $this->slideService)
             $this->slideService = $this->getService('slide');
         return $this->slideService;
     }

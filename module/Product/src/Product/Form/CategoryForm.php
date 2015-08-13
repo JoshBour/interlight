@@ -11,8 +11,10 @@ namespace Product\Form;
 
 use Zend\Form\Form;
 
-class CategoryForm extends Form{
-    public function __construct(){
+class CategoryForm extends Form
+{
+    public function __construct()
+    {
         parent::__construct("categoryForm");
 
         $this->setAttributes(array(

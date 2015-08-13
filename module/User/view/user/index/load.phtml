@@ -1,0 +1,7 @@
+<div class="totalProductsNumber invisible"><?php echo $this->paginator->getTotalItemCount(); ?></div>
+<?php
+foreach ($this->paginator as $user)
+    echo $this->partial('user', array(
+        "user" => $user
+    ))
+?>

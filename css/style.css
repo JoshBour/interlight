@@ -220,7 +220,7 @@ body {
 }
 
 body.blackLayout{
-    color:black;
+    color:#ccc;
     background: #100d10 url(../images/background.png);
 }
 
@@ -415,6 +415,14 @@ nav ul li a:hover {
             transition: opacity 0.2s ease-in-out;
         }
 
+        .postsPage #posts li {
+            margin-bottom: 30px;
+        }
+
+        #posts li.lastInlineItem{
+            margin-right:0;
+        }
+
         #posts li:hover{
             opacity:1;
         }
@@ -536,9 +544,9 @@ nav ul li a:hover {
 
         #categories li{
             display:inline-block;
-            margin: 20px 40px 20px 35px;
+            margin: 20px 40px 15px 35px;
             opacity:0.8;
-            padding: 0;
+            padding: 0 0 5px 0;
         }
 
         #categories li.notFound{
@@ -551,6 +559,7 @@ nav ul li a:hover {
 
         #categories li.lastInlineItem{
             margin-right:0;
+            margin-left: 30px;
         }
 
         #categories li span{
@@ -561,16 +570,25 @@ nav ul li a:hover {
             opacity: 1;
         }
 
-        #categories li.product:hover img{
-            border:1px solid #222;
+        #categories .product:hover{
+            border:1px solid #999;
         }
+
+        /*#categories li.product:hover a img{*/
+            /*border:1px solid #aaa;*/
+        /*}*/
 
         #categories .product a{
             color:#aaa;
         }
 
         #categories .product span{
-            margin-top: 7px;
+            margin: 7px auto 0 auto;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
             font-size: 14px;
         }
 
@@ -802,10 +820,22 @@ nav ul li a:hover {
         }
 
     /* ===================================================== */
+    /*                   Product list Page                   */
+
+
+    /* ===================================================== */
     /*                   Product view Page                   */
 
         #sidebar .tabs a:hover,#sidebar .tabs .activeTab, #returnNav a:hover{
             color:black;
+        }
+
+        .magnifiable{
+            cursor:zoom-in;
+        }
+
+        #shadow{
+            cursor:zoom-out;
         }
 
     /* ===================================================== */
@@ -897,6 +927,13 @@ nav ul li a:hover {
         }
 
     /* ===================================================== */
+    /*                       About Page                      */
+
+        div#aboutCategory img {
+            max-width: 650px;
+        }
+
+    /* ===================================================== */
     /*                       Posts Page                      */
 
         .pagination a{
@@ -920,10 +957,14 @@ nav ul li a:hover {
             margin-top:20px;
         }
 
+        #post h1{
+            color:#fff;
+        }
+
         #post .postThumbnail{
             float: left;
-            margin: 6px 0;
-            border-right: 10px solid #111;
+            margin: 6px 10px 6px 0;
+            max-width: 435px;
         }
 
         #post .postHeader{
@@ -1005,7 +1046,7 @@ footer.halfSized {
     #stageWrapper {
         position: fixed;
         width: 40%;
-        top: 50%;
+        /*top: 50%;*/
         left: 50%;
         margin-top: -19%;
         margin-left: -20%;

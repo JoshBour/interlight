@@ -26,13 +26,13 @@ class IndexController extends BaseController
 
     public function homeAction()
     {
-        $slides = $this->getRepository('application','slide')->findBy(array(), array("position" => "ASC"));
+        $slides = $this->getRepository('application', 'slide')->findBy(array(), array("position" => "ASC"));
         $posts = $this->getPostRepository()->findBy(array(), array("postDate" => "DESC"), 3);
         return new ViewModel(array(
             "slides" => $slides,
             "posts" => $posts,
             "useBlackLayout" => true,
-            "bodyClass" => "homePage"
+            "bodyClass" => "homePage blackLayout"
         ));
     }
 
@@ -50,9 +50,9 @@ class IndexController extends BaseController
             if ($form->isValid()) {
                 $applicationService = $this->getService('application');
                 $result = $applicationService->sendMail($data);
-                if($result) {
+                if ($result) {
                     $this->flashMessenger()->addMessage($vocabulary["EMAIL_SUCCESS"]);
-                }else{
+                } else {
                     $this->flashMessenger()->addMessage($applicationService->getMessage());
                 }
                 return $this->redirect()->toRoute('contact');
@@ -61,9 +61,9 @@ class IndexController extends BaseController
         }
         return new ViewModel(array(
             "form" => $form,
-            "content" => $this->getRepository('application','content')->findOneBy(array("target" => "contact")),
+            "content" => $this->getRepository('application', 'content')->findOneBy(array("target" => "contact")),
             "useBlackLayout" => true,
-            "bodyClass" => "contactPage",
+            "bodyClass" => "contactPage blackLayout",
             "pageTitle" => "Info - Contact Us"
         ));
     }
@@ -154,14 +154,27 @@ class IndexController extends BaseController
     public function uploadFileAction()
     {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest() && $this->identity()) {
+        // this check is used for older web browsers, so that we can return the correct response
+        $xhr = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+        if ($this->identity()) {
             $data = array_merge_recursive(
                 $request->getPost()->toArray(),
                 $request->getFiles()->toArray()
             );
-            $name = $this->getService('fileUtil')->uploadFile($data);
-            $success = $name ? 1 : 0;
-            return new JsonModel(array("success" => $success, "name" => $name));
+            $fileService = $this->getService('fileUtil');
+            $result =  $fileService->upload($data);
+            $success = $result ? 1 : 0;
+            $response = array("success" => $success, "message" => $fileService->getMessage(), "result" => $result);
+            if ($xhr) {
+                return new JsonModel($response);
+            } else {
+                $viewModel = new ViewModel(array(
+                    "result" => json_encode($response),
+                ));
+                $viewModel->setTerminal(true);
+
+                return $viewModel;
+            }
         }
         return $this->notFoundAction();
     }
@@ -195,7 +208,7 @@ class IndexController extends BaseController
     public function getPostRepository()
     {
         if (null == $this->postRepository)
-            $this->postRepository = $this->getRepository('post','post');
+            $this->postRepository = $this->getRepository('post', 'post');
         return $this->postRepository;
     }
 

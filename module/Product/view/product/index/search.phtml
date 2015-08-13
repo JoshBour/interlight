@@ -4,7 +4,7 @@ if (!empty($products)):
      * @var \Product\Entity\Product $product
      */
     foreach ($products as $key => $product): ?>
-        <li class="product<?php echo ($key + 1) % 3 === 0 ? ' lastInlineItem"' : ""; ?>">
+        <li class="product<?php echo ($key + 1) % 3 === 0 ? ' lastInlineItem' : ""; ?>">
             <a href="<?php echo $this->url('products_index/product_uncategorised', array("productNumber" => $product->getProductNumber())); ?>"
                title="<?php echo $product->getName(); ?>">
                 <img

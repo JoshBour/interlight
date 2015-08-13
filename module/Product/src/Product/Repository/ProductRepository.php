@@ -8,19 +8,54 @@
 
 namespace Product\Repository;
 
-
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\EntityRepository;
+use Zend\Paginator\Paginator;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
-class ProductRepository extends EntityRepository{
-    public function search($value){
-        if(!empty($value)){
+class ProductRepository extends EntityRepository
+{
+    public function findAssoc(){
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.productId as id, p.productNumber as value')
+            ->orderBy("p.productId","DESC");
+
+        $resultArray = [];
+        foreach($qb->getQuery()->getResult() as $result){
+            $resultArray[$result["id"]] = $result["value"];
+        }
+
+        return $resultArray;
+    }
+
+    public function searchAll($value){
+        $qb = $this->createQueryBuilder('p');
+        $qb->where($qb->expr()->like('p.name', '?1'))
+            ->orWhere($qb->expr()->like('p.productNumber', '?2'))
+            ->setParameter(1, $value . '%')
+            ->setParameter(2, $value . '%');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function search($value, $page = 1, $count = null, $sort = null)
+    {
+        if (!empty($value)) {
             $qb = $this->createQueryBuilder('p');
-            $qb->where($qb->expr()->like('p.name','?1'))
-                ->orWhere($qb->expr()->like('p.productNumber','?2'))
-                ->setParameter(1, $value.'%')
-                ->setParameter(2, $value.'%');
-            return $qb->getQuery()->getResult();
-        }else{
+            $qb->where($qb->expr()->like('p.name', '?1'))
+                ->orWhere($qb->expr()->like('p.productNumber', '?2'))
+                ->setParameter(1, $value . '%')
+                ->setParameter(2, $value . '%');
+
+            if($sort) $qb->orderBy("p.".$sort["column"],$sort["type"]);
+
+
+            $paginator = new Paginator(new DoctrineAdapter(new ORMPaginator($qb)));
+            if($count) $paginator->setDefaultItemCountPerPage($count);
+            $paginator->setCurrentPageNumber($page);
+
+            return $paginator;
+        } else {
             throw new \InvalidArgumentException("The product's name can't be empty.");
         }
     }

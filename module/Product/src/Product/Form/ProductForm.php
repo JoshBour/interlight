@@ -11,8 +11,10 @@ namespace Product\Form;
 
 use Zend\Form\Form;
 
-class ProductForm extends Form{
-    public function __construct(){
+class ProductForm extends Form
+{
+    public function __construct()
+    {
         parent::__construct("productForm");
 
         $this->setAttributes(array(
@@ -35,6 +37,7 @@ class ProductForm extends Form{
             'product' => array(
                 'productNumber',
                 'name',
+                'attributes',
                 'description',
                 'datasheet',
                 'thumbnail',

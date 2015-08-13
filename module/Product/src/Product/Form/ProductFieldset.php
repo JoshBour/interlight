@@ -25,40 +25,72 @@ class ProductFieldset extends BaseFieldset implements InputFilterProviderInterfa
 
         $this->add(array(
             "name" => "productNumber",
-            "type" => "text"
+            "type" => "text",
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_NUMBER"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_PRODUCT_NUMBER"])
+            ),
         ));
 
         $this->add(array(
             "name" => "name",
-            "type" => "text"
+            "type" => "text",
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_NAME"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_PRODUCT_NAME"])
+            ),
         ));
 
         $this->add(array(
             "name" => "description",
-            "type" => "textarea"
+            "type" => "textarea",
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_DESCRIPTION"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_PRODUCT_DESCRIPTION"])
+            ),
         ));
 
-//        $this->add(array(
-//            'type' => 'text',
-//            'name' => 'attributes',
-//            'attributes' => array(
-//                'class' => 'attributeSelect'
-//            )
-//        ));
+        $this->add(array(
+            'type' => 'text',
+            'name' => 'attributes',
+            'options' => array(
+                'object_manager' => $this->getEntityManager(),
+                'target_class' => 'Product\Entity\Attribute',
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_ATTRIBUTES"])
+            ),
+            'attributes' => array(
+                'class' => 'attributeSelect'
+            )
+        ));
 
         $this->add(array(
             "name" => "datasheet",
-            "type" => "file"
+            "type" => "file",
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_DATASHEET"])
+            ),
         ));
 
         $this->add(array(
             "name" => "thumbnail",
-            "type" => "file"
+            "type" => "file",
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_THUMBNAIL"])
+            ),
         ));
 
         $this->add(array(
             "name" => "specifications",
-            "type" => "file"
+            "type" => "file",
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_SPECIFICATIONS"])
+            ),
         ));
 
         $this->add(array(
@@ -71,7 +103,8 @@ class ProductFieldset extends BaseFieldset implements InputFilterProviderInterfa
                 'object_manager' => $this->getEntityManager(),
                 'target_class' => 'Product\Entity\Product',
                 'property' => 'productNumber',
-                'disable_inarray_validator' => true
+                'disable_inarray_validator' => true,
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_RELATED_PRODUCTS"])
             ),
         ));
 
@@ -85,7 +118,8 @@ class ProductFieldset extends BaseFieldset implements InputFilterProviderInterfa
                 'object_manager' => $this->getEntityManager(),
                 'target_class' => 'Product\Entity\Product',
                 'property' => 'productNumber',
-                'disable_inarray_validator' => true
+                'disable_inarray_validator' => true,
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_VARIATIONS"])
             ),
         ));
 
@@ -97,7 +131,8 @@ class ProductFieldset extends BaseFieldset implements InputFilterProviderInterfa
                 'target_class' => 'Product\Entity\Category',
                 "empty_option" => $this->getTranslator()->translate($vocabulary['EMPTY_OPTION']),
                 'property' => 'name',
-                'disable_inarray_validator' => true
+                'disable_inarray_validator' => true,
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_PRODUCT_CATEGORY"])
             ),
         ));
     }
@@ -110,141 +145,27 @@ class ProductFieldset extends BaseFieldset implements InputFilterProviderInterfa
      */
     public function getInputFilterSpecification()
     {
-        $vocabulary = $this->getVocabulary();
-        return array(
-            'productNumber' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_PRODUCT_NUMBER_EMPTY"])
-                            )
-                        )
-                    ),
-                    array(
-                        'name' => 'DoctrineModule\Validator\NoObjectExists',
-                        'options' => array(
-                            'object_repository' => $this->getEntityManager()->getRepository('Product\Entity\Product'),
-                            'fields' => 'productNumber',
-                            'messages' => array(
-                                'objectFound' => $this->getTranslator()->translate($vocabulary["ERROR_PRODUCT_NUMBER_EXISTS"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'name' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_NAME_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'description' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_DESCRIPTION_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-//                'filters' => array(
-//                    array('name' => 'StringTrim'),
-//                    array(
-//                        'name' => 'StripTags',
-//                        'options' => array(
-//                            'allowTags' => array('a','br','strong','del','em','ul','li','ol','img')
-//                        )
-//                    )
-//                )
-            ),
-            'datasheet' => array(
-                'required' => false,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_PRODUCT_DATASHEET_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-            ),
-            'thumbnail' => array(
-                'required' => false,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_THUMBNAIL_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-            ),
-            'specifications' => array(
-                'required' => false,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_PRODUCT_SPECIFICATIONS_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-            ),
-            'relatedProducts' => array(
-                'required' => false,
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'productVariations' => array(
-                'required' => false,
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'category' => array(
-                'required' => false,
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
+        $filters = $this->getServiceLocator()->get('productFilter')->getMergedFilters();
+        $filters["thumbnail"]["validators"][] = array(
+            'name' => 'Application\Validator\Image',
+            'options' => array(
+                'maxSize' => '40960',
+            )
         );
+        $filters["specifications"]["validators"][] = array(
+            'name' => 'Application\Validator\Image',
+            'options' => array(
+                'maxSize' => '40960',
+            )
+        );
+        $filters["datasheet"]["validators"][] = array(
+            'name' => 'Application\Validator\File',
+            'options' => array(
+                'maxSize' => '40960',
+            )
+        );
+
+        return $filters;
     }
 
 } 

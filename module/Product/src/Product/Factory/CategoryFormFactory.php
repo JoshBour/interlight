@@ -10,6 +10,7 @@ namespace Product\Factory;
 
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Product\Entity\Category;
 use Product\Entity\Product;
 use Product\Form\CategoryFieldset;
 use Product\Form\CategoryForm;
@@ -37,11 +38,11 @@ class CategoryFormFactory implements FactoryInterface
          */
         $fieldset = $formManager->get('Product\Form\CategoryFieldset');
         $form = new CategoryForm();
-        $hydrator = new DoctrineHydrator($entityManager, '\Post\Entity\Post');
+        $hydrator = new DoctrineHydrator($entityManager, '\Product\Entity\Category');
 
         $fieldset->setUseAsBaseFieldset(true)
             ->setHydrator($hydrator)
-            ->setObject(new Product);
+            ->setObject(new Category());
 
         $form->add($fieldset)
             ->setInputFilter(new InputFilter())

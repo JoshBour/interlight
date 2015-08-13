@@ -22,14 +22,28 @@ class AboutCategoryFieldset extends BaseFieldset implements InputFilterProviderI
     {
         parent::__construct("aboutCategory");
 
+        $vocabulary = $this->getVocabulary();
+
         $this->add(array(
             'name' => 'title',
             'type' => 'text',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_ABOUT_TITLE"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_ABOUT_TITLE"])
+            ),
         ));
 
         $this->add(array(
             'name' => 'content',
             'type' => 'text',
+            'options' => array(
+                'label' => $this->getTranslator()->translate($vocabulary["LABEL_ABOUT_CONTENT"])
+            ),
+            'attributes' => array(
+                'placeholder' => $this->getTranslator()->translate($vocabulary["PLACEHOLDER_ABOUT_CONTENT"])
+            ),
         ));
     }
 
@@ -41,45 +55,7 @@ class AboutCategoryFieldset extends BaseFieldset implements InputFilterProviderI
      */
     public function getInputFilterSpecification()
     {
-        $vocabulary = $this->getVocabulary();
-        return array(
-            'title' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_TITLE_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-            'content' => array(
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
-                        'break_chain_on_failure' => true,
-                        'options' => array(
-                            'messages' => array(
-                                NotEmpty::IS_EMPTY => $this->getTranslator()->translate($vocabulary["ERROR_CONTENT_EMPTY"])
-                            )
-                        )
-                    ),
-                ),
-                'filters' => array(
-                    array('name' => 'StringTrim'),
-                    array('name' => 'StripTags')
-                )
-            ),
-        );
+        return $this->getServiceLocator()->get('aboutCategoryFilter')->getMergedFilters();
     }
 
 

@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Attribute
  * @package Product\Entity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Product\Repository\AttributeRepository")
  * @ORM\Table(name="attributes")
  */
 class Attribute {
@@ -36,8 +36,7 @@ class Attribute {
      */
     private $products;
 
-    public function __construct($name){
-        $this->name = $name;
+    public function __construct(){
         $this->products = new ArrayCollection();
     }
 

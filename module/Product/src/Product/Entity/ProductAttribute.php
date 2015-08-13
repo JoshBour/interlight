@@ -19,14 +19,14 @@ use Doctrine\ORM\Mapping as ORM;
 class ProductAttribute {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Product", inversedBy="attributes")
+     * @ORM\ManyToOne(targetEntity="Product", inversedBy="attributes", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="product_id")
      **/
     private $product;
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Attribute", inversedBy="products")
+     * @ORM\ManyToOne(targetEntity="Attribute", inversedBy="products", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="attribute_id", referencedColumnName="attribute_id")
      **/
     private $attribute;
@@ -55,7 +55,7 @@ class ProductAttribute {
     }
 
     /**
-     * @return mixed
+     * @return Attribute
      */
     public function getAttribute()
     {

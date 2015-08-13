@@ -1,0 +1,23 @@
+<div class="formWrapper">
+    <h2>Add a new Attribute</h2>
+    <?php
+    $form->prepare();
+    /**
+     * @var \Zend\Form\Fieldset $fieldset
+     */
+    $fieldset = $form->get('attribute');
+    $form->setAttribute('action', $this->url('attributes/add'));
+    echo $this->form()->openTag($form);
+    //echo $this->formHidden($form->get('security'));
+    ?>
+    <div class="element">
+        <?php
+        $name = $fieldset->get('name');
+        echo $this->formLabel($name);
+        echo $this->formElementErrors($name, array('class' => 'formError'));
+        echo $this->formInput($name);
+        ?>
+    </div>
+    <?php echo $this->formSubmit($form->get('submit')->setValue($this->translate('Add'))); ?>
+    <?php echo $this->form()->closeTag() ?>
+</div>

@@ -1,0 +1,73 @@
+<?php
+/**
+ * @var \Product\Entity\Product $product
+ */
+$productId = $product->getProductId();
+$attributes = $product->getAttributes();
+$datasheet = $product->getDatasheet();
+$thumbnail = $product->getThumbnail(false);
+$specifications = $product->getSpecifications(false);
+$relatedProducts = $product->getRelatedProductsAssoc();
+$productVariations = $product->getProductVariationsAssoc();
+$category = $product->getCategory();
+?>
+<div class="tableColumn">
+    <div data-attribute="productId">
+        <span class="tableCellText"><?php echo $productId; ?></span>
+    </div>
+    <div data-attribute="productNumber">
+        <span class="tableCellText"><?php echo $product->getProductNumber(); ?></span>
+    </div>
+    <div data-attribute="name">
+        <span class="tableCellText"><?php echo $product->getName(); ?></span>
+    </div>
+    <div data-attribute="description" data-type="textarea">
+        <span class="tableCellText"><?php echo htmlentities($product->getDescription()); ?></span>
+    </div>
+    <div data-attribute="attributes" data-type="attributes">
+        <span class="tableCellMeta">
+            <?php echo $this->attributeSelect($this->attributes, $attributes); ?>
+        </span>
+        <span class="tableCellText">-</span>
+    </div>
+    <div data-attribute="datasheet" data-type="file">
+        <span class="tableCellMeta">{"location":"data/datasheets","current" : "<?php echo $datasheet; ?>", "prefix": "datasheet"}</span>
+                    <span class="tableCellText">
+                        <?php echo $datasheet ? $datasheet : ' - '; ?>
+                    </span>
+    </div>
+    <div data-attribute="thumbnail" data-type="image">
+        <span class="tableCellMeta">{"location":"images/products","current" : "<?php echo $thumbnail; ?>", "prefix": "product"}</span>
+                    <span class="tableCellText">
+                        <?php echo $thumbnail ? '<img src="' . $this->basePath('images/products/' . $thumbnail) . '" alt="' . $this->translate("product image") . '" />' : '-'; ?>
+                    </span>
+    </div>
+    <div data-attribute="specifications" data-type="image">
+                    <span
+                        class="tableCellMeta">{"location":"images/products","current" : "<?php echo $specifications; ?>
+                        ", "prefix": "specifications"}</span>
+                    <span class="tableCellText">
+                        <?php echo $specifications ? '<img src="' . $this->basePath('images/products/' . $specifications) . '" alt="' . $this->translate("specifications image") . '" />' : '-'; ?>
+                    </span>
+    </div>
+    <div data-attribute="relatedProducts"
+         data-constraints='[{"type":"foreign","target":"Product\Entity\Product"}]' data-type="multiSelect">
+        <span class="tableCellMeta">
+            <?php echo $this->select($productsAssoc, $productId, $relatedProducts, false, true); ?>
+        </span>
+        <span class="tableCellText">-</span>
+    </div>
+    <div data-attribute="productVariations"
+         data-constraints='[{"type":"foreign","target":"Product\Entity\Product"}]' data-type="multiSelect">
+        <span class="tableCellMeta">
+            <?php echo $this->select($productsAssoc, $productId, $productVariations, false, true); ?>
+        </span>
+        <span class="tableCellText">-</span>
+    </div>
+    <div data-attribute="category"
+         data-constraints='[{"type":"foreign","target":"Product\Entity\Category"}]' data-type="select">
+                    <span
+                        class="tableCellMeta"><?php echo $this->select($this->categories, null, $category ? $category->getCategoryId() : null, true); ?></span>
+        <span class="tableCellText"><?php echo $category ? $category->getName() : '-'; ?></span>
+    </div>
+</div>

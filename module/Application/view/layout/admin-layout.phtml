@@ -15,7 +15,7 @@ echo $this->partial("header_admin", array('child' => $child));
     </div>
 </noscript>
 <?php if ($this->identity()):
-    $route = $this->routeName();
+    $route = isset($child->activeRoute) ? $child->activeRoute : $this->routeName();
     if (!$child->hideHeader):?>
         <header>
             <div id="topWrapper">
@@ -32,11 +32,11 @@ echo $this->partial("header_admin", array('child' => $child));
                             <a href="<?php echo $this->url('posts'); ?>"<?php echo $route == "posts" ? ' class="active"' : ''; ?>><?php echo $this->translate("Posts"); ?></a>
                         </li>
                         <li>
+                            <a href="<?php echo $this->url('attributes'); ?>"<?php echo $route == "attributes" ? ' class="active"' : ''; ?>><?php echo $this->translate("Attributes"); ?></a>
+                        </li>
+                        <li>
                             <a href="<?php echo $this->url('categories'); ?>"<?php echo $route == "categories" ? ' class="active"' : ''; ?>><?php echo $this->translate("Categories"); ?></a>
                         </li>
-<!--                        <li>-->
-<!--                            <a href="--><?php //echo $this->url('partners'); ?><!--"--><?php //echo $route == "partners" ? ' class="active"' : ''; ?><!-->--><?php //echo $this->translate("Partners"); ?><!--</a>-->
-<!--                        </li>-->
                         <li>
                             <a href="<?php echo $this->url('about'); ?>"<?php echo $route == "about" ? ' class="active"' : ''; ?>><?php echo $this->translate("About"); ?></a>
                         </li>
@@ -49,7 +49,7 @@ echo $this->partial("header_admin", array('child' => $child));
                         <li>
                             <a href="<?php echo $this->url('users'); ?>"<?php echo $route == "users" ? ' class="active"' : ''; ?>><?php echo $this->translate("Users"); ?></a>
                         </li>
-                        <li class="rFloat"><a
+                        <li><a
                                 href="<?php echo $this->url('logout'); ?>"><?php echo $this->translate("Logout"); ?></a>
                         </li>
                     </ul>
