@@ -11,7 +11,7 @@
         </select>
     </div>
     <input type="text" class="tableSearch" placeholder="Search...">
-    <a href="http://interlight.test.com/admin/<?php echo $this->location; ?>/add" title="Add a new entity" class="addLink"><img
+    <a href="<?php echo $this->url($this->location . "/add"); ?>" title="Add a new entity" class="addLink"><img
             src="http://interlight.test.com/vendor/bettertable/images/add-link-icon.png"><span>Add</span></a>
     <?php
     echo $this->partial("admin_paginator", array(

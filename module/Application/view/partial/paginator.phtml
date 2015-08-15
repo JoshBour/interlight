@@ -19,8 +19,8 @@ $current = $paginator->getCurrentPageNumber();
     <?php endif; ?>
 
     <!-- Numbered page links -->
-    <?php for ($i = 0; $i < $pages; $i++): ?>
-        <?php if ($i != $paginator->getCurrentPageNumber()): ?>
+    <?php for ($i = 1; $i <= $pages; $i++): ?>
+        <?php if ($i != $current): ?>
             <li>
                 <a href="#?page=<?php echo $i; ?>">
                     <?php echo $i; ?>

@@ -54,10 +54,13 @@ class FileUtilService extends BaseService
         $loc = ROOT_PATH . '/' . $location . '/' . $newName;
         $renameOptions['target'] = $loc;
         $renameOptions['overwrite'] = true;
-//        chmod($loc, 0644);
+
         try{
             $rename = new Rename($renameOptions);
             $rename->filter($file);
+
+            $mode = 644;
+            if(!chmod($loc, octdec($mode))) return false;
             return $newName;
         }catch (\Exception $e){
             return false;

@@ -24,8 +24,7 @@ if (APPLICATION_ENV == "development") {
     $this->inlineScript()->appendFile($this->basePath('vendor/bettertable/js/jquery.bettertable.1.0.min.js', 'text/javascript'));
 }
 // rest
-$this->inlineScript()->appendFile($this->basePath('js/Gettext.js'), 'text/javascript')
-    ->appendFile($this->basePath('js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9')))
+$this->inlineScript()->appendFile($this->basePath('js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9')))
     ->appendFile($this->basePath('js/lib' . (APPLICATION_ENV == "development" ? "" : ".min") . '.js'), 'text/javascript')
     ->appendFile($this->basePath('js/admin/admin-main' . (APPLICATION_ENV == "development" ? "" : ".min") . '.js'), 'text/javascript');
 
