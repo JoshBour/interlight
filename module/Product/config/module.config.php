@@ -250,6 +250,7 @@ return array(
         'invokables' => array(
             'formAttributeSelect' => __NAMESPACE__ . '\Form\Helper\AttributeSelect',
             'attributeSelect' => __NAMESPACE__ . '\View\Helper\AttributeSelect',
+            'productSelect' => __NAMESPACE__ . '\View\Helper\ProductSelect',
         ),
     ),
     'controllers' => array(

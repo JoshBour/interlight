@@ -15,7 +15,7 @@ $thumbnail = $post->getThumbnail();
         <span class="tableCellText"><?php echo htmlentities($post->getContent()); ?></span>
     </div>
     <div data-attribute="thumbnail" data-type="image">
-        <span class="tableCellMeta">{"location":"images/posts","current" : "<?php echo $thumbnail ? $thumbnail : ''; ?>", "name": "post"}</span>
+        <span class="tableCellMeta">{"location":"images/posts","current" : "<?php echo $thumbnail ? $thumbnail : ''; ?>", "prefix": "post"}</span>
                     <span class="tableCellText">
                         <?php echo $thumbnail ? '<img src="' . $this->basePath('images/posts/' . $thumbnail) . '" alt="' . $this->translate("post image") . '" />' : '-'; ?>
                     </span>

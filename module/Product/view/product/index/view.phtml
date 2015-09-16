@@ -14,9 +14,9 @@ $price = $product->getPrice();
 
 
 $productVariations = $product->getProductVariations()->toArray();
-if (count($productVariations) <= 0){
+if (count($productVariations) <= 0) {
     $productVariations[] = $product;
-}else {
+} else {
     uasort($productVariations, function ($a, $b) {
         return $a->getProductNumber() > $b->getProductNumber();
     });
@@ -42,9 +42,9 @@ if (count($productVariations) <= 0){
     <div class="productPhotos">
         <img class="productThumbnail magnifiable"
              src="<?php echo $this->basePath('images/products/' . $product->getThumbnail()); ?>"/>
-        <?php if($specifications): ?>
-        <img class="productSpecifications magnifiable"
-             src="<?php echo $this->basePath('images/products/' . $product->getSpecifications()); ?>"/>
+        <?php if ($specifications): ?>
+            <img class="productSpecifications magnifiable"
+                 src="<?php echo $this->basePath('images/products/' . $product->getSpecifications()); ?>"/>
         <?php endif; ?>
     </div>
     <div itemscope itemtype="http://schema.org/Product" class="invisible">
@@ -80,7 +80,7 @@ if (count($productVariations) <= 0){
         <tr>
             <th>Product Number</th>
             <?php
-                $attributes = $productVariations[0]->getAttributes()->toArray();
+            $attributes = $productVariations[0]->getAttributes()->toArray();
             $attributeCount = count($attributes) + 1;
             usort($attributes, function ($a, $b) {
                 return $a->getPosition() > $b->getPosition();
@@ -93,10 +93,10 @@ if (count($productVariations) <= 0){
         </thead>
         <tbody>
         <?php
-//        $productVariations = $product->getProductVariations()->toArray();
-//        uasort($productVariations, function ($a, $b) {
-//            return $a->getPosition() > $b->getPosition();
-//        });
+        //        $productVariations = $product->getProductVariations()->toArray();
+        //        uasort($productVariations, function ($a, $b) {
+        //            return $a->getPosition() > $b->getPosition();
+        //        });
         foreach ($productVariations as $variation):
             if (!$variation) continue;
             ?>
@@ -126,8 +126,7 @@ if (count($productVariations) <= 0){
             <h2>Related Products</h2>
             <ul class="module">
                 <?php foreach ($relatedProducts as $relatedProduct)
-                    $related = $relatedProduct->getRelatedProduct();
-                echo $this->partial('product', array("product" => $related, "includeName" => true, "category" => $category));
+                    echo $this->partial('product', array("product" => $relatedProduct, "includeName" => true, "category" => $category));
                 ?>
             </ul>
         </div>

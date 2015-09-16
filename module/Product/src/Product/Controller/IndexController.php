@@ -49,11 +49,11 @@ class IndexController extends BaseController
 
     public function viewAction()
     {
-        $categoryUrl = $this->params()->fromRoute("categoryUrl",null);
-        $productNumber = $this->params()->fromRoute("productNumber",null);
-        if($productNumber){
-            $category = $this->getCategoryRepository()->findOneBy(array("url"=>$categoryUrl));
-            $product = $this->getProductRepository()->findOneBy(array("productNumber"=>$productNumber));
+        $categoryUrl = $this->params()->fromRoute("categoryUrl", null);
+        $productNumber = $this->params()->fromRoute("productNumber", null);
+        if ($productNumber) {
+            $category = $this->getCategoryRepository()->findOneBy(array("url" => $categoryUrl));
+            $product = $this->getProductRepository()->findOneBy(array("productNumber" => $productNumber));
             return new ViewModel(array(
                 "category" => $category,
                 "product" => $product,
@@ -73,7 +73,7 @@ class IndexController extends BaseController
             $viewModel->setTerminal(true);
             $value = $this->params()->fromRoute("value");
             $products = $this->getProductRepository()->searchAll($value);
-            $viewModel->setVariable("products",$products );
+            $viewModel->setVariable("products", $products);
 //            var_dump($products);
             return $viewModel;
         }
@@ -91,14 +91,14 @@ class IndexController extends BaseController
 
             $limit = $params->get("limit", 10);
             $page = $params->get("page", 1);
-            $sort = $params->get("sort",null);
-            $search = $params->get("search",null);
+            $sort = $params->get("sort", null);
+            $search = $params->get("search", null);
 
 
             $viewModel = new ViewModel(array(
                 "paginator" => $service->load($limit, $page, $sort, $search),
                 "categories" => $this->getCategoryRepository()->findNameAndId(),
-                "attributes" => $this->getRepository("product","attribute")->findAll(),
+                "attributes" => $this->getRepository("product", "attribute")->findAll(),
                 "productsAssoc" => $this->getProductRepository()->findAssoc()
             ));
             $viewModel->setTerminal(true);
@@ -111,16 +111,9 @@ class IndexController extends BaseController
     {
         if ($this->identity()) {
             $this->layout()->setTemplate(self::LAYOUT_ADMIN);
-            $params = $this->params();
-//            $productRepository = $this->getProductRepository();
-
-            $limit = $params->fromRoute("limit", 10);
-            $page = $params->fromQuery("page");
-            $sort = $params->fromRoute("sort");
-            $search = $params->fromRoute("search");
 
             return new ViewModel(array(
-                "attributes" => $this->getRepository('product','attribute')->findAll(),
+                "attributes" => $this->getRepository('product', 'attribute')->findAll(),
                 "categories" => $this->getCategoryRepository()->findNameAndId(),
                 "paginator" => $this->getProductService()->load(),
                 "productsAssoc" => $this->getProductRepository()->findAssoc()
@@ -204,7 +197,7 @@ class IndexController extends BaseController
     public function getCategoryRepository()
     {
         if (null == $this->categoryRepository)
-            $this->categoryRepository = $this->getRepository('product','category');
+            $this->categoryRepository = $this->getRepository('product', 'category');
         return $this->categoryRepository;
     }
 
@@ -228,7 +221,7 @@ class IndexController extends BaseController
     public function getProductRepository()
     {
         if (null === $this->productRepository)
-            $this->productRepository = $this->getRepository('product','product');
+            $this->productRepository = $this->getRepository('product', 'product');
         return $this->productRepository;
     }
 

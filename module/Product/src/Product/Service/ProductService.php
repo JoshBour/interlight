@@ -48,20 +48,28 @@ class ProductService extends BaseService
             $sort = array();
         };
         $productRepository = $this->getProductRepository();
-        if (empty($search) || trim($search) == false) {
-            // the findby uses a different format
-            if (!empty($sort)) $sort = array($sort["column"] => $sort["type"]);
 
-            $products = $productRepository->findBy(array(), $sort);
+        return $productRepository->findByFilters(array(
+            "sort" => $sort,
+            "search" => $search,
+            "limit" => $limit,
+            "page" => $page,
+        ));
 
-            $paginator = new Paginator(new ArrayAdapter($products));
-            $paginator->setCurrentPageNumber($page)
-                ->setDefaultItemCountPerPage($limit);
-
-            return $paginator;
-        } else {
-            return $productRepository->search($search, $page, $limit, $sort);
-        }
+//        if (empty($search) || trim($search) == false) {
+//            // the findby uses a different format
+//            if (!empty($sort)) $sort = array($sort["column"] => $sort["type"]);
+//
+//            $products = $productRepository->findBy(array(), $sort);
+//
+//            $paginator = new Paginator(new ArrayAdapter($products));
+//            $paginator->setCurrentPageNumber($page)
+//                ->setDefaultItemCountPerPage($limit);
+//
+//            return $paginator;
+//        } else {
+//            return $productRepository->search($search, $page, $limit, $sort);
+//        }
     }
 
 

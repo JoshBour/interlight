@@ -51,16 +51,16 @@ $category = $product->getCategory();
                     </span>
     </div>
     <div data-attribute="relatedProducts"
-         data-constraints='[{"type":"foreign","target":"Product\Entity\Product"}]' data-type="multiSelect">
+         data-constraints='[{"type":"foreign","target":"Product\Entity\Product"}]' data-type="products">
         <span class="tableCellMeta">
-            <?php echo $this->select($productsAssoc, $productId, $relatedProducts, false, true); ?>
+            <?php echo $this->productSelect($productsAssoc, $relatedProducts); ?>
         </span>
         <span class="tableCellText">-</span>
     </div>
     <div data-attribute="productVariations"
-         data-constraints='[{"type":"foreign","target":"Product\Entity\Product"}]' data-type="multiSelect">
+         data-constraints='[{"type":"foreign","target":"Product\Entity\Product"}]' data-type="products">
         <span class="tableCellMeta">
-            <?php echo $this->select($productsAssoc, $productId, $productVariations, false, true); ?>
+            <?php echo $this->productSelect($productsAssoc, $productVariations); ?>
         </span>
         <span class="tableCellText">-</span>
     </div>
